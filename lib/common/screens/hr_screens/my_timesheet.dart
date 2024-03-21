@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
 
 class MyTimesheetHRScreen extends StatefulWidget {
   const MyTimesheetHRScreen({super.key, required this.title});
@@ -15,7 +16,7 @@ class MyTimesheetHRScreen extends StatefulWidget {
   State<MyTimesheetHRScreen> createState() => _MyTimesheetHRScreenState();
 }
 
-// final CreateMeetingUserController cmc = CreateMeetingUserController();
+final HRUsersController hrUc = HRUsersController();
 
 class _MyTimesheetHRScreenState extends State<MyTimesheetHRScreen> {
   @override
@@ -106,7 +107,7 @@ class _MyTimesheetHRScreenState extends State<MyTimesheetHRScreen> {
         const SizedBox(height: 10),
         Expanded(
           child: FutureBuilder(
-            future: cmc.getRooms(),
+            future: hrUc.getHRUsersList(),
             builder: (BuildContext ctx, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -164,27 +165,8 @@ class _MyTimesheetHRScreenState extends State<MyTimesheetHRScreen> {
                             String meetingType =
                                 snapshot.data[index].meetingType;
                             int id = snapshot.data[index].id;
-                            // Get.to(UpdateRoomsScreen(
-                            //   title: 'Update Room',
-                            //   name: name,
-                            //   floor: floor,
-                            //   seatingCapacity: seatingCapacity,
-                            //   roomDetails: roomDetails,
-                            //   meetingType: meetingType,
-                            //   id: id,
-                            // ));
                           },
-                          child: RoomDetailsCard(
-                            ht: 160,
-                            wd: 350,
-                            duration: 1,
-                            name: '${snapshot.data[index].name} ',
-                            floor: '${snapshot.data[index].floor} ',
-                            seatingCapacity:
-                                '${snapshot.data[index].seatingCapacity} ',
-                            roomDetails: '${snapshot.data[index].roomDetails} ',
-                            meetingType: '${snapshot.data[index].meetingType} ',
-                          ),
+                          child: Container(),
                         ),
                       ),
                     ),

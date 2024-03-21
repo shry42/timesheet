@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 class UserDetails {
-  final int id;
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String mobileNo;
-  final String role;
+  final int? id;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? mobileNo;
+  final String? role;
+  final int? isVerified;
+  final int? isManager;
 
   UserDetails({
     required this.id,
@@ -15,6 +17,8 @@ class UserDetails {
     required this.email,
     required this.mobileNo,
     required this.role,
+    required this.isVerified,
+    required this.isManager,
   });
 
   factory UserDetails.fromJson(Map<String, dynamic> json) {
@@ -25,17 +29,8 @@ class UserDetails {
       email: json['email'],
       mobileNo: json['mobileNo'],
       role: json['role'],
+      isVerified: json['isVerified'],
+      isManager: json['isManager'],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstName'] = this.firstName;
-    data['lastName'] = this.lastName;
-    data['email'] = this.email;
-    data['mobileNo'] = this.mobileNo;
-    data['role'] = this.role;
-    return data;
   }
 }

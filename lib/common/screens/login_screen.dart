@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/bottom_navigations/bottom_navigation_hr.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
@@ -66,14 +65,16 @@ class LoginPage extends StatelessWidget {
                                 width: 80,
                                 height: 150,
                                 child: FadeInUp(
-                                    duration:
-                                        const Duration(milliseconds: 1200),
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(
-                                                  'assets/images/light-2.png'))),
-                                    )),
+                                  duration: const Duration(milliseconds: 1200),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/light-2.png'),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                               Positioned(
                                 right: 40,

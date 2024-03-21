@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:timesheet/common/bottom_navigations/bottom_nav_controller.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_create_tasks.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_departments.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_users.dart';
+import 'package:timesheet/common/screens/hr_screens/my_timesheet.dart';
 
 class BottomNavHR extends StatefulWidget {
   final int initialIndex;
@@ -19,7 +23,12 @@ class _BottomNavHRState extends State<BottomNavHR> {
   int _page = 0;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
-  List pages = [];
+  List pages = [
+    const UsersHRScreen(title: 'Users List'),
+    const MyTimesheetHRScreen(title: 'Timesheets'),
+    const DepartmentsHRScreen(title: 'Departments'),
+    const ApprovalsHRScreen(title: 'Approval Lists'),
+  ];
 
   @override
   void initState() {

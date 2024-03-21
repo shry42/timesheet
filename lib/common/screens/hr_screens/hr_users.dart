@@ -5,17 +5,19 @@ import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_update_users.dart';
+import 'package:timesheet/utils/widgets/hr_cards/hr_users_card.dart';
 
 class UsersHRScreen extends StatefulWidget {
   const UsersHRScreen({super.key, required this.title});
-
   final String title;
 
   @override
   State<UsersHRScreen> createState() => _UsersHRScreenState();
 }
 
-// final CreateMeetingUserController cmc = CreateMeetingUserController();
+final HRUsersController hrUc = HRUsersController();
 
 class _UsersHRScreenState extends State<UsersHRScreen> {
   @override
@@ -88,7 +90,7 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                         children: [
                           Center(
                             child: Text(
-                              'Create Rooms',
+                              'Create Users',
                               style:
                                   TextStyle(color: Colors.black, fontSize: 12),
                             ),
@@ -106,7 +108,7 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
         const SizedBox(height: 10),
         Expanded(
           child: FutureBuilder(
-            future: c mc.getRooms(),
+            future: hrUc.getHRUsersList(),
             builder: (BuildContext ctx, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -117,7 +119,7 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                       SizedBox(height: 50),
                       CircularProgressIndicator(),
                       SizedBox(height: 10),
-                      Text('Loading rooms...'),
+                      Text('Loading users...'),
                     ],
                   ),
                 );
@@ -131,7 +133,7 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                       Icon(Icons.error, color: Colors.red),
                       SizedBox(height: 60),
                       Text(
-                          '    Error loading rooms\nPlease try again by logging out'),
+                          '    Error loading users\nPlease try again by logging out'),
                     ],
                   ),
                 );
@@ -142,7 +144,7 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: 65),
-                      Text('No rooms to show\ncreate rooms first!'),
+                      Text('No users to show\ncreate users first!'),
                     ],
                   ),
                 );
@@ -155,35 +157,39 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                         itemCount: snapshot.data.length,
                         itemBuilder: (ctx, index) => GestureDetector(
                           onTap: () async {
-                            String name = snapshot.data[index].name;
-                            String floor = snapshot.data[index].floor;
-                            int seatingCapacity =
-                                snapshot.data[index].seatingCapacity;
-                            String roomDetails =
-                                snapshot.data[index].roomDetails;
-                            String meetingType =
-                                snapshot.data[index].meetingType;
+                            String firstName = snapshot.data[index].firstName;
+                            String lastName = snapshot.data[index].lastName;
+                            String email = snapshot.data[index].email;
+                            String mobileNo = snapshot.data[index].mobileNo;
+                            int isManager = snapshot.data[index].isManager;
                             int id = snapshot.data[index].id;
-                            // Get.to(UpdateRoomsScreen(
-                            //   title: 'Update Room',
-                            //   name: name,
-                            //   floor: floor,
-                            //   seatingCapacity: seatingCapacity,
-                            //   roomDetails: roomDetails,
-                            //   meetingType: meetingType,
-                            //   id: id,
-                            // ));
+                            int reportingManagerId =
+                                snapshot.data[index].reportingManager;
+                            String reportingManagerWithName =
+                                snapshot.data[index].reportingManagerWithName;
+                            Get.to(HRUpdateUserScreen(
+                              title: 'Update User',
+                              id: id,
+                              firstName: firstName,
+                              lastName: lastName,
+                              email: email,
+                              mobileNo: mobileNo,
+                              isManager: isManager,
+                              reportingManagerId: reportingManagerId,
+                              reportingManagerWithName:
+                                  reportingManagerWithName,
+                            ));
                           },
-                          child: RoomDetailsCard(
-                            ht: 160,
-                            wd: 350,
-                            duration: 1,
-                            name: '${snapshot.data[index].name} ',
-                            floor: '${snapshot.data[index].floor} ',
-                            seatingCapacity:
-                                '${snapshot.data[index].seatingCapacity} ',
-                            roomDetails: '${snapshot.data[index].roomDetails} ',
-                            meetingType: '${snapshot.data[index].meetingType} ',
+                          child: HRUsersCard(
+                            ht: 140,
+                            wd: 400,
+                            duration: 200,
+                            name:
+                                ' ${snapshot.data[index].firstName} ${snapshot.data[index].lastName}',
+                            email: snapshot.data[index].email,
+                            mobile: snapshot.data[index].mobileNo,
+                            reportingManager:
+                                snapshot.data[index].reportingManagerWithName,
                           ),
                         ),
                       ),

@@ -7,19 +7,21 @@ import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/screens/login_screen.dart';
 import 'package:timesheet/services/api_service.dart';
 
-class UpdateUserController extends GetxController {
-  Future updateUserDetails(
+class CreateUserController extends GetxController {
+  Future createUser(
     String firstName,
     lastName,
     email,
+    employeeId,
+    password,
+    confirmPass,
     mobileNo,
-    int id,
-    String reportingManagerWithName,
     int reportingManagerId,
-    String isManager,
+    int isManager,
+    List<dynamic> departments,
   ) async {
-    http.Response response = await http.put(
-      Uri.parse('${ApiService.baseUrl}/api/auth/updateUserDetails'),
+    http.Response response = await http.post(
+      Uri.parse('${ApiService.baseUrl}/api/auth/registerUser'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${AppController.accessToken}',
@@ -28,10 +30,13 @@ class UpdateUserController extends GetxController {
         "firstName": firstName,
         "lastName": lastName,
         "email": email,
+        "employeeId": employeeId,
+        "password": password,
+        "confirmPassword": confirmPass,
         "mobileNo": mobileNo,
-        "id": id,
+        "isManager": isManager,
         "reportingManager": reportingManagerId,
-        "isManager": isManager.toString(),
+        "department": departments,
       }),
     );
     if (response.statusCode == 200) {

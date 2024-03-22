@@ -1,61 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
+import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:timesheet/common/controllers/hr_controllers/getall_verified_departemnets.dart';
+import 'package:timesheet/common/controllers/hr_controllers/hr_create_user_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_updateUserController.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
-import 'package:timesheet/common/controllers/hr_delete_controller.dart';
 import 'package:timesheet/common/models/hr_models/hr_users_model.dart';
-import 'package:timesheet/common/screens/hr_screens/hr_update_department.dart';
 
-class HRUpdateUserScreen extends StatefulWidget {
-  HRUpdateUserScreen({
+class HRCreateUsers extends StatefulWidget {
+  HRCreateUsers({
     super.key,
     required this.title,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.mobileNo,
-    required this.id,
-    required this.isManager,
-    required this.reportingManagerId,
-    required this.reportingManagerWithName,
   });
 
-  final String title, firstName, lastName, email, mobileNo;
-  final int id;
-  String isManager;
-  int reportingManagerId;
-  final String reportingManagerWithName;
+  final String title;
 
   @override
-  State<HRUpdateUserScreen> createState() => _HRUpdateUserScreenState();
+  State<HRCreateUsers> createState() => _HRCreateUsersState();
 }
 
-class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
-  final UpdateUserController uuc = UpdateUserController();
+class _HRCreateUsersState extends State<HRCreateUsers> {
+  final CreateUserController uuc = CreateUserController();
 
   final TextEditingController firstNameController = TextEditingController();
 
   final TextEditingController lastNameController = TextEditingController();
 
   final TextEditingController emailController = TextEditingController();
+  //
+  final TextEditingController employeeIdController = TextEditingController();
+
+  final TextEditingController passwordController = TextEditingController();
+
+  final TextEditingController confirmPassController = TextEditingController();
 
   final TextEditingController mobileNoController = TextEditingController();
 
   final TextEditingController isManagerController = TextEditingController();
   final TextEditingController reportingManagerIdController =
       TextEditingController();
+  dynamic isManager;
+  dynamic reportingManagerId;
 
-  final TextEditingController reportingManagerWithNameController =
-      TextEditingController();
+  final AllDepartmentList adl = AllDepartmentList();
 
-  final DeleteUserController duc = DeleteUserController();
+  final CreateUserController cuc = CreateUserController();
 
   final HRUsersController hruc = HRUsersController();
   List<HRAllUsersListModel> hrUserListObj = [];
-  getData() {
+  List<dynamic> _selectedDepartmentIds = [];
+  List<dynamic> deptNames = [];
+  getData() async {
+    await adl.getAllDepartments();
     hrUserListObj = HRUsersController.managersList;
+    deptNames = AllDepartmentList.verifiedDepartmentList;
+    setState(() {});
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -65,10 +68,10 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
     super.initState();
     getData();
     // Initialize the controllers with the provided values
-    firstNameController.text = widget.firstName;
-    lastNameController.text = widget.lastName;
-    emailController.text = widget.email;
-    mobileNoController.text = widget.mobileNo;
+    // firstNameController.text = widget.firstName;
+    // lastNameController.text = widget.lastName;
+    // emailController.text = widget.email;
+    // mobileNoController.text = widget.mobileNo;
   }
 
   @override
@@ -109,95 +112,13 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  // const SizedBox(width: 20),
-                  // Shimmer(
-                  //   duration: const Duration(seconds: 2),
-                  //   // This is NOT the default value. Default value: Duration(seconds: 0)
-                  //   interval: const Duration(milliseconds: 20),
-                  //   // This is the default value
-                  //   color: Colors.white,
-                  //   // This is the default value
-                  //   colorOpacity: 1,
-                  //   // This is the default value
-                  //   enabled: true,
-                  //   // This is the default value
-                  //   direction: const ShimmerDirection.fromLTRB(),
-                  //   child: GestureDetector(
-                  //     onTap: () async {
-                  //       await duc.deleteUser(widget.id);
-                  //     },
-                  //     child: Container(
-                  //       height: 30,
-                  //       width: 115,
-                  //       decoration: BoxDecoration(
-                  //           border: Border.all(),
-                  //           color: Colors.white70,
-                  //           borderRadius: BorderRadius.circular(6)),
-                  //       child: const Row(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         crossAxisAlignment: CrossAxisAlignment.center,
-                  //         children: [
-                  //           Center(
-                  //             child: Text(
-                  //               'Delete user',
-                  //               style: TextStyle(
-                  //                   color: Colors.black, fontSize: 12),
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   const Spacer(),
-                  Shimmer(
-                    duration: const Duration(seconds: 2),
-                    // This is NOT the default value. Default value: Duration(seconds: 0)
-                    interval: const Duration(milliseconds: 20),
-                    // This is the default value
-                    color: Colors.white,
-                    // This is the default value
-                    colorOpacity: 1,
-                    // This is the default value
-                    enabled: true,
-                    // This is the default value
-                    direction: const ShimmerDirection.fromLTRB(),
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.to(HRUpdateDepartment(
-                          title: 'Update Department',
-                          id: widget.id,
-                        ));
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 115,
-                        decoration: BoxDecoration(
-                            border: Border.all(),
-                            color: Colors.white70,
-                            borderRadius: BorderRadius.circular(6)),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: Text(
-                                'Update Department',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 12),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 5),
+                  const SizedBox(width: 10),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 30),
           Column(children: [
             Padding(
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
@@ -289,6 +210,83 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
               child: TextFormField(
+                controller: employeeIdController,
+                // initialValue: widget.email,
+                onChanged: (value) {
+                  // AppController.setemailId(emailController.text);
+                  // c.userName.value = emailController.text;
+                },
+                decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  labelText: 'Employee Id',
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter employee id";
+                  }
+                  {
+                    return "Please enter a valid employeeId";
+                  }
+                },
+              ),
+            ),
+            Padding(
+              //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+              child: TextFormField(
+                  controller: passwordController,
+                  // initialValue: widget.lastName,
+                  onChanged: (value) {
+                    // AppController.setemailId(emailController.text);
+                    // c.userName.value = emailController.text;
+                  },
+                  decoration: InputDecoration(
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    labelText: 'Password',
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter password";
+                    }
+                  }),
+            ),
+            Padding(
+              //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+              child: TextFormField(
+                controller: confirmPassController,
+                // initialValue: widget.lastName,
+                onChanged: (value) {
+                  // AppController.setemailId(emailController.text);
+                  // c.userName.value = emailController.text;
+                },
+                decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  labelText: 'Confirm Password',
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please re enter password";
+                  }
+                },
+              ),
+            ),
+            Padding(
+              //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+              child: TextFormField(
                 controller: mobileNoController,
                 // initialValue: widget.mobileNo,
                 onChanged: (value) {
@@ -324,7 +322,7 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
                   ),
                   labelText: 'Reporting Manager',
                 ),
-                value: widget.reportingManagerId,
+                // value: widget.reportingManagerId,
                 items: hrUserListObj
                     .map((user) => DropdownMenuItem<int>(
                           value: user.id,
@@ -333,14 +331,14 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
                     .toList(),
                 onChanged: (value) {
                   setState(() {
-                    widget.reportingManagerId = value!;
+                    reportingManagerId = value!;
                   });
                 },
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-              child: DropdownButtonFormField<String>(
+              child: DropdownButtonFormField<int>(
                 decoration: InputDecoration(
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -349,25 +347,96 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
                   ),
                   labelText: 'Is a Manager?',
                 ),
-                value: widget.isManager.toString(),
+                // value: widget.isManager.toString(),
                 onChanged: (value) {
                   setState(() {
-                    widget.isManager = value!;
+                    isManager = value!;
                   });
                 },
                 items: const [
                   DropdownMenuItem(
-                    value: '1',
+                    value: 1,
                     child: Text('Yes'),
                   ),
                   DropdownMenuItem(
-                    value: '0',
+                    value: 0,
                     child: Text('No'),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 35),
+            // const SizedBox(height: 35),
+            ...[
+              // const SizedBox(height: 17),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: MultiSelectDialogField<String>(
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Please select at least one department';
+                    //   }
+                    //   return null;
+                    // },
+                    searchable: true,
+                    items: deptNames
+                        .map(
+                          (dept) => MultiSelectItem<String>(
+                              // dept.id,
+                              dept.id.toString(),
+                              dept.name),
+                        )
+                        .toList(),
+                    initialValue: [],
+                    onConfirm: (values) {
+                      setState(() {
+                        _selectedDepartmentIds = values;
+                      });
+                    },
+                    title: const Text('Select Departments'),
+                    buttonText: const Text('Select Departments'),
+                    chipDisplay: MultiSelectChipDisplay<String>(
+                      onTap: (item) {
+                        setState(() {
+                          _selectedDepartmentIds.remove(item);
+                        });
+                      },
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    buttonIcon: const Icon(Icons.arrow_drop_down_outlined),
+                  ),
+                ),
+              ),
+              // Display selected departments
+              if (_selectedDepartmentIds != null &&
+                  _selectedDepartmentIds.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Wrap(
+                    spacing: 8,
+                    children: _selectedDepartmentIds.map((deptId) {
+                      final dept = deptNames
+                          .firstWhere((dept) => dept.id == int.parse(deptId));
+                      return Chip(
+                        label: Text(dept.name),
+                        onDeleted: () {
+                          setState(() {
+                            _selectedDepartmentIds.remove(deptId);
+                          });
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+            ],
+            const SizedBox(height: 20),
             Shimmer(
               duration: const Duration(seconds: 2),
               // This is NOT the default value. Default value: Duration(seconds: 0)
@@ -389,15 +458,18 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
                 child: ElevatedButton(
                   onPressed: () async {
                     // if (_formKey.currentState!.validate()) {
-                    await uuc.updateUserDetails(
-                        firstNameController.text,
-                        lastNameController.text,
-                        emailController.text,
-                        mobileNoController.text,
-                        widget.id,
-                        reportingManagerWithNameController.text,
-                        widget.reportingManagerId,
-                        widget.isManager.toString());
+                    await cuc.createUser(
+                      firstNameController.text,
+                      lastNameController.text,
+                      emailController.text,
+                      employeeIdController.text,
+                      passwordController.text,
+                      confirmPassController.text,
+                      mobileNoController.text,
+                      reportingManagerId,
+                      isManager,
+                      _selectedDepartmentIds,
+                    );
                     // }
                   },
                   child: const Row(

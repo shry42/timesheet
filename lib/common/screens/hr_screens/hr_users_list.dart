@@ -6,6 +6,7 @@ import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_create_users.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_update_users.dart';
 import 'package:timesheet/utils/widgets/hr_cards/hr_users_card.dart';
 
@@ -75,7 +76,7 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                   direction: const ShimmerDirection.fromLTRB(),
                   child: GestureDetector(
                     onTap: () {
-                      // Get.to(CreateRoomScreen(title: 'Create Rooms'));
+                      Get.to(HRCreateUsers(title: 'Create Uers'));
                     },
                     child: Container(
                       height: 30,
@@ -174,7 +175,7 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                               lastName: lastName,
                               email: email,
                               mobileNo: mobileNo,
-                              isManager: isManager,
+                              isManager: isManager.toString(),
                               reportingManagerId: reportingManagerId,
                               reportingManagerWithName:
                                   reportingManagerWithName,

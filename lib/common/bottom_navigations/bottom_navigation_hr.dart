@@ -5,7 +5,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:timesheet/common/bottom_navigations/bottom_nav_controller.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_create_tasks.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_departments.dart';
-import 'package:timesheet/common/screens/hr_screens/hr_users.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_users_list.dart';
 import 'package:timesheet/common/screens/hr_screens/my_timesheet.dart';
 
 class BottomNavHR extends StatefulWidget {
@@ -54,7 +54,7 @@ class _BottomNavHRState extends State<BottomNavHR> {
             Icon(Icons.description, size: 26, color: Colors.white),
             Icon(Icons.person_pin_rounded, size: 26, color: Colors.white),
             // Icon(Icons.person_add_alt_1_rounded, size: 26, color: Colors.white),
-            Icon(Icons.house, size: 26, color: Colors.white),
+            Icon(Icons.list_alt_outlined, size: 26, color: Colors.white),
             Icon(Icons.person, size: 26, color: Colors.white),
           ],
           onTap: (index) {

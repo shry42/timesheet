@@ -58,45 +58,45 @@ class _DepartmentsHRScreenState extends State<DepartmentsHRScreen> {
                   ),
                 ),
                 const Spacer(),
-                Shimmer(
-                  duration: const Duration(seconds: 2),
-                  // This is NOT the default value. Default value: Duration(seconds: 0)
-                  interval: const Duration(milliseconds: 20),
-                  // This is the default value
-                  color: Colors.white,
-                  // This is the default value
-                  colorOpacity: 1,
-                  // This is the default value
-                  enabled: true,
-                  // This is the default value
-                  direction: const ShimmerDirection.fromLTRB(),
-                  child: GestureDetector(
-                    onTap: () {
-                      // Get.to(CreateRoomScreen(title: 'Create Rooms'));
-                    },
-                    child: Container(
-                      height: 30,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          border: Border.all(),
-                          color: Colors.white70,
-                          borderRadius: BorderRadius.circular(6)),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: Text(
-                              'Create Rooms',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 12),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                // Shimmer(
+                //   duration: const Duration(seconds: 2),
+                //   // This is NOT the default value. Default value: Duration(seconds: 0)
+                //   interval: const Duration(milliseconds: 20),
+                //   // This is the default value
+                //   color: Colors.white,
+                //   // This is the default value
+                //   colorOpacity: 1,
+                //   // This is the default value
+                //   enabled: true,
+                //   // This is the default value
+                //   direction: const ShimmerDirection.fromLTRB(),
+                //   child: GestureDetector(
+                //     onTap: () {
+                //       // Get.to(CreateRoomScreen(title: 'Create Rooms'));
+                //     },
+                //     child: Container(
+                //       height: 30,
+                //       width: 100,
+                //       decoration: BoxDecoration(
+                //           border: Border.all(),
+                //           color: Colors.white70,
+                //           borderRadius: BorderRadius.circular(6)),
+                //       child: const Row(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         crossAxisAlignment: CrossAxisAlignment.center,
+                //         children: [
+                //           Center(
+                //             child: Text(
+                //               'Create Rooms',
+                //               style:
+                //                   TextStyle(color: Colors.black, fontSize: 12),
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(width: 10),
               ],
             ),

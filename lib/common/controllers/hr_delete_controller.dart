@@ -7,7 +7,7 @@ import 'package:timesheet/common/screens/login_screen.dart';
 import 'package:timesheet/services/api_service.dart';
 
 class DeleteUserController extends GetxController {
-  Future deleteUser(int userId) async {
+  Future deleteUser(int userId, String deleteReason) async {
     http.Response response = await http.put(
       Uri.parse('${ApiService.baseUrl}/api/auth/deleteUser'),
       headers: {
@@ -16,12 +16,14 @@ class DeleteUserController extends GetxController {
       },
       body: json.encode({
         "userId": userId,
+        "deleteReason": deleteReason,
       }),
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> result = json.decode(response.body);
       bool? status = result['status'];
       String message = result['message'];
+      AppController.setmessage(message);
     } else if (response.statusCode != 200) {
       Map<String, dynamic> result = json.decode(response.body);
       bool? status = result['status'];

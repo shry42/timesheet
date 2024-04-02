@@ -1,12 +1,13 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:timesheet/common/bottom_navigations/bottom_nav_controller.dart';
-import 'package:timesheet/common/screens/hr_screens/hr_create_tasks.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_create_view_attributes.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_create_view_projects.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_create_view_tasks.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_departments.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_profile_settings.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_users_list.dart';
-import 'package:timesheet/common/screens/hr_screens/my_timesheet.dart';
 
 class BottomNavHR extends StatefulWidget {
   final int initialIndex;
@@ -25,9 +26,11 @@ class _BottomNavHRState extends State<BottomNavHR> {
 
   List pages = [
     const UsersHRScreen(title: 'Users List'),
-    const MyTimesheetHRScreen(title: 'Timesheets'),
+    const HRMyProjects(title: 'My Projects'),
     const DepartmentsHRScreen(title: 'Departments'),
-    const ApprovalsHRScreen(title: 'Approval Lists'),
+    const HRMyTasks(title: 'Tasks List'),
+    const HRMyAttributes(title: 'Attributes List'),
+    const HRSettingsScreen(title: 'Profile'),
   ];
 
   @override
@@ -52,9 +55,10 @@ class _BottomNavHRState extends State<BottomNavHR> {
           animationDuration: const Duration(milliseconds: 200),
           items: const <Widget>[
             Icon(Icons.description, size: 26, color: Colors.white),
-            Icon(Icons.person_pin_rounded, size: 26, color: Colors.white),
-            // Icon(Icons.person_add_alt_1_rounded, size: 26, color: Colors.white),
+            Icon(Icons.book, size: 26, color: Colors.white),
             Icon(Icons.list_alt_outlined, size: 26, color: Colors.white),
+            Icon(Icons.task_outlined, size: 26, color: Colors.white),
+            Icon(Icons.attractions, size: 26, color: Colors.white),
             Icon(Icons.person, size: 26, color: Colors.white),
           ],
           onTap: (index) {

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:timesheet/common/bottom_navigations/bottom_navigation_hr.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/screens/login_screen.dart';
 import 'package:timesheet/services/api_service.dart';
@@ -33,9 +32,10 @@ class AddDepartmentController extends GetxController {
           textConfirm: "OK",
           confirmTextColor: Colors.white,
           onConfirm: () {
-            Get.offAll(const BottomNavHR(
-              initialIndex: 0,
-            ));
+            // Get.offAll(const BottomNavHR(
+            //   initialIndex: 0,
+            // ));
+            Get.back();
           },
         );
       } else if (response.statusCode != 200) {

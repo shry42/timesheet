@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 
 class HRUsersCard extends StatelessWidget {
   const HRUsersCard({
@@ -11,6 +10,7 @@ class HRUsersCard extends StatelessWidget {
     required this.email,
     required this.mobile,
     required this.reportingManager,
+    this.isManager,
   }) : super(key: key);
 
   final double? ht;
@@ -20,6 +20,7 @@ class HRUsersCard extends StatelessWidget {
   final String email;
   final String mobile;
   final String reportingManager;
+  final String? isManager;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +109,23 @@ class HRUsersCard extends StatelessWidget {
                       Flexible(
                         child: Text(
                           'reportingManager :  $reportingManager',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 3, left: 18),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'isManager :  $isManager',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

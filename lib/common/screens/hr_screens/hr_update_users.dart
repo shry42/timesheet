@@ -6,7 +6,8 @@ import 'package:timesheet/common/controllers/hr_controllers/hr_updateUserControl
 import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
 import 'package:timesheet/common/controllers/hr_delete_controller.dart';
 import 'package:timesheet/common/models/hr_models/hr_users_model.dart';
-import 'package:timesheet/common/screens/hr_screens/hr_update_department.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_assign_delete_department.dart';
+import 'package:timesheet/utils/widgets/delete_user_reason_dilaogbox.dart';
 
 class HRUpdateUserScreen extends StatefulWidget {
   HRUpdateUserScreen({
@@ -109,46 +110,48 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  // const SizedBox(width: 20),
-                  // Shimmer(
-                  //   duration: const Duration(seconds: 2),
-                  //   // This is NOT the default value. Default value: Duration(seconds: 0)
-                  //   interval: const Duration(milliseconds: 20),
-                  //   // This is the default value
-                  //   color: Colors.white,
-                  //   // This is the default value
-                  //   colorOpacity: 1,
-                  //   // This is the default value
-                  //   enabled: true,
-                  //   // This is the default value
-                  //   direction: const ShimmerDirection.fromLTRB(),
-                  //   child: GestureDetector(
-                  //     onTap: () async {
-                  //       await duc.deleteUser(widget.id);
-                  //     },
-                  //     child: Container(
-                  //       height: 30,
-                  //       width: 115,
-                  //       decoration: BoxDecoration(
-                  //           border: Border.all(),
-                  //           color: Colors.white70,
-                  //           borderRadius: BorderRadius.circular(6)),
-                  //       child: const Row(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         crossAxisAlignment: CrossAxisAlignment.center,
-                  //         children: [
-                  //           Center(
-                  //             child: Text(
-                  //               'Delete user',
-                  //               style: TextStyle(
-                  //                   color: Colors.black, fontSize: 12),
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  const SizedBox(width: 20),
+                  Shimmer(
+                    duration: const Duration(seconds: 2),
+                    interval: const Duration(milliseconds: 20),
+                    color: Colors.white,
+                    colorOpacity: 1,
+                    enabled: true,
+                    direction: const ShimmerDirection.fromLTRB(),
+                    child: GestureDetector(
+                      onTap: () async {
+                        Get.defaultDialog(
+                          backgroundColor:
+                              const Color.fromARGB(255, 195, 215, 196),
+                          title: 'Delete Reason',
+                          content: DeleteReasonDialogBox(
+                            userId: widget.id,
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 90,
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(6)),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Delete user',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   const Spacer(),
                   Shimmer(
                     duration: const Duration(seconds: 2),
@@ -164,8 +167,8 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
                     direction: const ShimmerDirection.fromLTRB(),
                     child: GestureDetector(
                       onTap: () {
-                        Get.to(HRUpdateDepartment(
-                          title: 'Update Department',
+                        Get.to(HRUserAssignAddDepartmentList(
+                          title: 'User Department list',
                           id: widget.id,
                         ));
                       },
@@ -182,7 +185,7 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
                           children: [
                             Center(
                               child: Text(
-                                'Update Department',
+                                'view/edit Department',
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 12),
                               ),

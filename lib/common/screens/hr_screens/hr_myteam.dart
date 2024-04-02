@@ -1,31 +1,23 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
+import 'package:timesheet/common/controllers/hr_controllers/get_myteam_controller.dart';
+import 'package:timesheet/utils/widgets/hr_cards/my_team_card.dart';
 
-import 'package:shimmer_animation/shimmer_animation.dart';
-import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
-
-class MyTimesheetHRScreen extends StatefulWidget {
-  const MyTimesheetHRScreen({super.key, required this.title});
-
+class MyTeamScreen extends StatefulWidget {
+  const MyTeamScreen({super.key, required this.title});
   final String title;
 
   @override
-  State<MyTimesheetHRScreen> createState() => _MyTimesheetHRScreenState();
+  State<MyTeamScreen> createState() => _MyTeamScreenState();
 }
 
-final HRUsersController hrUc = HRUsersController();
+final MyTeamListController mtlc = MyTeamListController();
 
-class _MyTimesheetHRScreenState extends State<MyTimesheetHRScreen> {
+class _MyTeamScreenState extends State<MyTeamScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 213, 231, 214),
-      // automaticallyImplyLeading: false,
-      // shadowColor: Colors.black87,
-      // elevation: 1,
       body: Column(children: [
         const SizedBox(height: 40),
         GlassContainer(
@@ -59,47 +51,6 @@ class _MyTimesheetHRScreenState extends State<MyTimesheetHRScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const Spacer(),
-                // Shimmer(
-                //   duration: const Duration(seconds: 2),
-                //   // This is NOT the default value. Default value: Duration(seconds: 0)
-                //   interval: const Duration(milliseconds: 20),
-                //   // This is the default value
-                //   color: Colors.white,
-                //   // This is the default value
-                //   colorOpacity: 1,
-                //   // This is the default value
-                //   enabled: true,
-                //   // This is the default value
-                //   direction: const ShimmerDirection.fromLTRB(),
-                //   child: GestureDetector(
-                //     onTap: () {
-                //       // Get.to(CreateRoomScreen(title: 'Create Rooms'));
-                //     },
-                //     child: Container(
-                //       height: 30,
-                //       width: 100,
-                //       decoration: BoxDecoration(
-                //           border: Border.all(),
-                //           color: Colors.white70,
-                //           borderRadius: BorderRadius.circular(6)),
-                //       child: const Row(
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         crossAxisAlignment: CrossAxisAlignment.center,
-                //         children: [
-                //           Center(
-                //             child: Text(
-                //               'Create Rooms',
-                //               style:
-                //                   TextStyle(color: Colors.black, fontSize: 12),
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                const SizedBox(width: 10),
               ],
             ),
           ),
@@ -107,7 +58,7 @@ class _MyTimesheetHRScreenState extends State<MyTimesheetHRScreen> {
         const SizedBox(height: 10),
         Expanded(
           child: FutureBuilder(
-            future: hrUc.getHRUsersList(),
+            future: mtlc.getMyTeamList(),
             builder: (BuildContext ctx, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -118,7 +69,7 @@ class _MyTimesheetHRScreenState extends State<MyTimesheetHRScreen> {
                       SizedBox(height: 50),
                       CircularProgressIndicator(),
                       SizedBox(height: 10),
-                      Text('Loading rooms...'),
+                      Text('Loading team list...'),
                     ],
                   ),
                 );
@@ -132,7 +83,7 @@ class _MyTimesheetHRScreenState extends State<MyTimesheetHRScreen> {
                       Icon(Icons.error, color: Colors.red),
                       SizedBox(height: 60),
                       Text(
-                          '    Error loading rooms\nPlease try again by logging out'),
+                          '    Error loading teams\nPlease try again by logging out'),
                     ],
                   ),
                 );
@@ -143,7 +94,7 @@ class _MyTimesheetHRScreenState extends State<MyTimesheetHRScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: 65),
-                      Text('No rooms to show\ncreate rooms first!'),
+                      Text('No teams to show'),
                     ],
                   ),
                 );
@@ -156,17 +107,27 @@ class _MyTimesheetHRScreenState extends State<MyTimesheetHRScreen> {
                         itemCount: snapshot.data.length,
                         itemBuilder: (ctx, index) => GestureDetector(
                           onTap: () async {
-                            String name = snapshot.data[index].name;
-                            String floor = snapshot.data[index].floor;
-                            int seatingCapacity =
-                                snapshot.data[index].seatingCapacity;
-                            String roomDetails =
-                                snapshot.data[index].roomDetails;
-                            String meetingType =
-                                snapshot.data[index].meetingType;
-                            int id = snapshot.data[index].id;
+                            // String attributeName = snapshot.data[index].name;
+                            // String description =
+                            //     snapshot.data[index].description;
+                            // int attributeId = snapshot.data[index].id;
+
+                            // if (AppController.role == 'hrManager') {
+                            //   Get.to(HRUpdateAttribute(
+                            //     description: description,
+                            //     attributeName: attributeName,
+                            //     attributeId: attributeId,
+                            //     title: 'Update Attribute',
+                            //   ));
+                            // }
                           },
-                          child: Container(),
+                          child: MyTeamCard(
+                              ht: 80,
+                              wd: 400,
+                              duration: 400,
+                              name:
+                                  "${snapshot.data![index].firstName}   ${snapshot.data![index].lastName}",
+                              email: snapshot.data![index].email.toString()),
                         ),
                       ),
                     ),

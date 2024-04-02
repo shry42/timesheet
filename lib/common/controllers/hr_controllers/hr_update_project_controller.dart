@@ -1,28 +1,37 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:timesheet/common/bottom_navigations/bottom_navigation_hr.dart';
+import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
+import 'package:timesheet/common/screens/login_screen.dart';
 import 'package:timesheet/services/api_service.dart';
 
-class CreateRoomController extends GetxController {
-  Future createRoom(
-      String name, floor, roomDetails, meetingType, int seatingCapacity) async {
-    http.Response response = await http.post(
-      Uri.parse('${ApiService.baseUrl}/api/'),
+class UpdateProjectController extends GetxController {
+  RxString selectedStartDate = ''.obs;
+  RxString selectedEndDate = ''.obs;
+
+  Future updateProject(
+      String name, description, code, startDate, endDate, int projectId) async {
+    Map<String, dynamic> requestBody = {
+      "name": name,
+      "description": description,
+      "startDate": startDate,
+      "endDate": endDate,
+      "projectId": projectId,
+    };
+
+    if (code != null && code.isNotEmpty) {
+      requestBody["code"] = code;
+    }
+
+    http.Response response = await http.put(
+      Uri.parse('${ApiService.baseUrl}/api/project/updateProject'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${AppController.accessToken}',
       },
-      body: json.encode({
-        "name": name,
-        "floor": floor,
-        "seatingCapacity": seatingCapacity,
-        "roomDetails": roomDetails,
-        "meetingType": meetingType,
-      }),
+      body: json.encode(requestBody),
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> result = json.decode(response.body);
@@ -32,13 +41,12 @@ class CreateRoomController extends GetxController {
       if (status == true) {
         Get.defaultDialog(
           title: "Success",
-          middleText: "$message",
+          middleText: message,
           textConfirm: "OK",
           confirmTextColor: Colors.white,
           onConfirm: () {
-            // Get.back(); // Close the dialog
             Get.offAll(const BottomNavHR(
-              initialIndex: 2,
+              initialIndex: 1,
             ));
           },
         );
@@ -51,7 +59,7 @@ class CreateRoomController extends GetxController {
         if (title == 'Validation Failed') {
           Get.defaultDialog(
             title: "Error",
-            middleText: "$message",
+            middleText: message,
             textConfirm: "OK",
             confirmTextColor: Colors.white,
             onConfirm: () {
@@ -65,7 +73,7 @@ class CreateRoomController extends GetxController {
             textConfirm: "OK",
             confirmTextColor: Colors.white,
             onConfirm: () {
-              Get.offAll(const BottomNavHR());
+              Get.offAll(LoginPage());
               // Get.back(); // Close the dialog
             },
           );

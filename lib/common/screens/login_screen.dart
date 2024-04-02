@@ -2,7 +2,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
-import 'package:timesheet/common/bottom_navigations/bottom_navigation_hr.dart';
+import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
+import 'package:timesheet/common/bottom_navigations/superadmin_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/controllers/login_controllers.dart';
 import 'package:timesheet/common/custom_painter.dart';
@@ -27,14 +28,16 @@ class LoginPage extends StatelessWidget {
                 width: 80,
                 height: 150,
                 child: FadeInUp(
-                    from: 120,
-                    duration: const Duration(seconds: 1),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image:
-                                  AssetImage('assets/images/playstore.png'))),
-                    )),
+                  from: 120,
+                  duration: const Duration(seconds: 1),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/playstore.png'),
+                      ),
+                    ),
+                  ),
+                ),
               ),
               Form(
                 key: _formKey,
@@ -233,8 +236,7 @@ class LoginPage extends StatelessWidget {
                                             },
                                           );
                                           return;
-                                        }
-                                        if (lc.role == 'hrManager') {
+                                        } else if (lc.role == 'hrManager') {
                                           await Get.offAll(const BottomNavHR(),
                                               transition:
                                                   Transition.rightToLeft);
@@ -245,6 +247,11 @@ class LoginPage extends StatelessWidget {
                                           //   //   title: 'User Profile',
                                           //   // ));
                                           // }
+                                        } else if (lc.role == 'superAdmin') {
+                                          await Get.offAll(
+                                              const BottomNavSuperAdmin(),
+                                              transition:
+                                                  Transition.rightToLeft);
                                         } else {
                                           toast(
                                               'Please fill credentials correctly');

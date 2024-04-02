@@ -1,33 +1,53 @@
-import 'dart:ui';
+import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
-
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_create_users.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_myteam.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_update_users.dart';
+import 'package:timesheet/common/screens/superadmin_screens/verify_users_screen.dart';
 import 'package:timesheet/utils/widgets/hr_cards/hr_users_card.dart';
 
 class UsersHRScreen extends StatefulWidget {
   const UsersHRScreen({super.key, required this.title});
+
   final String title;
 
   @override
   State<UsersHRScreen> createState() => _UsersHRScreenState();
 }
 
-final HRUsersController hrUc = HRUsersController();
-
 class _UsersHRScreenState extends State<UsersHRScreen> {
+  final HRUsersController hrUc = HRUsersController();
+
+  List<dynamic>? dataList;
+  List? searchDataList;
+  List? mainDataList;
+  final double height = 160;
+  final double width = 400;
+
+  @override
+  void initState() {
+    dataList; //Initialize as empty or else data will not be displayed until tapped on searchbar
+    hrUc;
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      await hrUc.getHRUsersList().then((value) {
+        setState(() {
+          dataList = value;
+          mainDataList = value;
+        });
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 213, 231, 214),
-      // automaticallyImplyLeading: false,
-      // shadowColor: Colors.black87,
-      // elevation: 1,
       body: Column(children: [
         const SizedBox(height: 40),
         GlassContainer(
@@ -64,19 +84,14 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                 const Spacer(),
                 Shimmer(
                   duration: const Duration(seconds: 2),
-                  // This is NOT the default value. Default value: Duration(seconds: 0)
                   interval: const Duration(milliseconds: 20),
-                  // This is the default value
                   color: Colors.white,
-                  // This is the default value
                   colorOpacity: 1,
-                  // This is the default value
                   enabled: true,
-                  // This is the default value
                   direction: const ShimmerDirection.fromLTRB(),
                   child: GestureDetector(
                     onTap: () {
-                      Get.to(HRCreateUsers(title: 'Create Uers'));
+                      Get.to(const MyTeamScreen(title: 'My Team List'));
                     },
                     child: Container(
                       height: 30,
@@ -91,7 +106,7 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                         children: [
                           Center(
                             child: Text(
-                              'Create Users',
+                              'My Team',
                               style:
                                   TextStyle(color: Colors.black, fontSize: 12),
                             ),
@@ -102,105 +117,496 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
+                if (AppController.role == 'hrManager')
+                  // const SizedBox(width: 10),
+                  Shimmer(
+                    duration: const Duration(seconds: 2),
+                    interval: const Duration(milliseconds: 20),
+                    color: Colors.white,
+                    colorOpacity: 1,
+                    enabled: true,
+                    direction: const ShimmerDirection.fromLTRB(),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(HRCreateUsers(title: 'Create Users'));
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(6)),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Create Users',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                const SizedBox(width: 10),
               ],
             ),
           ),
         ),
+
+        //
+
         const SizedBox(height: 10),
         Expanded(
-          child: FutureBuilder(
-            future: hrUc.getHRUsersList(),
-            builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 50),
-                      CircularProgressIndicator(),
-                      SizedBox(height: 10),
-                      Text('Loading users...'),
-                    ],
+          child: DefaultTabController(
+            length: 4,
+            child: Column(
+              children: <Widget>[
+                ButtonsTabBar(
+                  onTap: (index) {
+                    if (index == 0) {
+                      setState(() {
+                        dataList = mainDataList;
+                        searchDataList = dataList;
+                        // searchController.clear();
+                      });
+                    } else if (index == 1) {
+                      setState(() {
+                        dataList = mainDataList
+                            ?.where((element) => element.isVerified == 1)
+                            .toList();
+                        searchDataList = dataList;
+                        // searchController.clear();
+                      });
+                    } else if (index == 2) {
+                      setState(() {
+                        dataList = mainDataList
+                            ?.where((element) => element.isVerified == 2)
+                            .toList();
+                        searchDataList = dataList;
+                        // searchController.clear();
+                      });
+                    } else if (index == 3) {
+                      setState(() {
+                        dataList = mainDataList
+                            ?.where((element) => element.isVerified == 0)
+                            .toList();
+                        searchDataList = dataList;
+                        // searchController.clear();
+                      });
+                    }
+                  },
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                  unselectedBackgroundColor: Colors.white70,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: <Color>[
+                        Color.fromARGB(243, 84, 86, 80),
+                        Color.fromARGB(255, 151, 223, 126),
+                      ],
+                    ),
                   ),
-                );
-              } else if (snapshot.hasError) {
-                return const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 100),
-                      Icon(Icons.error, color: Colors.red),
-                      SizedBox(height: 60),
-                      Text(
-                          '    Error loading users\nPlease try again by logging out'),
-                    ],
+                  unselectedLabelStyle: const TextStyle(color: Colors.black),
+                  labelStyle: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                );
-              } else if (snapshot.data == null || snapshot.data.isEmpty) {
-                return const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 65),
-                      Text('No users to show\ncreate users first!'),
-                    ],
-                  ),
-                );
-              } else {
-                return Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        // reverse: true,
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (ctx, index) => GestureDetector(
-                          onTap: () async {
-                            String firstName = snapshot.data[index].firstName;
-                            String lastName = snapshot.data[index].lastName;
-                            String email = snapshot.data[index].email;
-                            String mobileNo = snapshot.data[index].mobileNo;
-                            int isManager = snapshot.data[index].isManager;
-                            int id = snapshot.data[index].id;
-                            int reportingManagerId =
-                                snapshot.data[index].reportingManager;
-                            String reportingManagerWithName =
-                                snapshot.data[index].reportingManagerWithName;
-                            Get.to(HRUpdateUserScreen(
-                              title: 'Update User',
-                              id: id,
-                              firstName: firstName,
-                              lastName: lastName,
-                              email: email,
-                              mobileNo: mobileNo,
-                              isManager: isManager.toString(),
-                              reportingManagerId: reportingManagerId,
-                              reportingManagerWithName:
-                                  reportingManagerWithName,
-                            ));
-                          },
-                          child: HRUsersCard(
-                            ht: 140,
-                            wd: 400,
-                            duration: 200,
-                            name:
-                                ' ${snapshot.data[index].firstName} ${snapshot.data[index].lastName}',
-                            email: snapshot.data[index].email,
-                            mobile: snapshot.data[index].mobileNo,
-                            reportingManager:
-                                snapshot.data[index].reportingManagerWithName,
-                          ),
-                        ),
-                      ),
+                  tabs: const [
+                    Tab(
+                      icon: Icon(Icons.all_inbox),
+                      text: "All",
+                    ),
+                    Tab(
+                      icon: Icon(Icons.approval),
+                      text: "Verified",
+                    ),
+                    Tab(
+                      icon: Icon(Icons.wrong_location_rounded),
+                      text: "Unverified",
+                    ),
+                    Tab(
+                      icon: Icon(Icons.pending),
+                      text: "Pending",
                     ),
                   ],
-                );
-              }
-            },
+                ),
+                Expanded(
+                  child: TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            Expanded(
+                              child: Builder(builder: (
+                                BuildContext context,
+                              ) {
+                                if (dataList == null || dataList!.isEmpty) {
+                                  return const Center(
+                                      child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // Image.asset(
+                                      //   'assets/loaderr.gif',
+                                      //   height: 200,
+                                      //   width: 130,
+                                      // ),
+                                      Text('No records found')
+                                    ],
+                                  ));
+                                } else {
+                                  return ListView.builder(
+                                      itemCount: dataList!.length,
+                                      itemBuilder: (context, index) {
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            String firstName =
+                                                dataList![index].firstName;
+                                            String lastName =
+                                                dataList![index].lastName;
+                                            String email =
+                                                dataList![index].email;
+                                            String mobileNo =
+                                                dataList![index].mobileNo;
+                                            int isManager =
+                                                dataList![index].isManager;
+                                            int id = dataList![index].id;
+                                            int reportingManagerId =
+                                                dataList![index]
+                                                    .reportingManager;
+                                            String reportingManagerWithName =
+                                                dataList![index]
+                                                    .reportingManagerWithName;
+                                            if (AppController.role ==
+                                                'hrManager') {
+                                              Get.to(HRUpdateUserScreen(
+                                                title: 'Update User',
+                                                id: id,
+                                                firstName: firstName,
+                                                lastName: lastName,
+                                                email: email,
+                                                mobileNo: mobileNo,
+                                                isManager: isManager.toString(),
+                                                reportingManagerId:
+                                                    reportingManagerId,
+                                                reportingManagerWithName:
+                                                    reportingManagerWithName,
+                                              ));
+                                            }
+                                          },
+                                          child: HRUsersCard(
+                                            ht: height,
+                                            wd: width,
+                                            duration: 200,
+                                            name:
+                                                ' ${dataList![index].firstName} ${dataList![index].lastName}',
+                                            email: dataList![index].email,
+                                            mobile: dataList![index].mobileNo,
+                                            reportingManager: dataList![index]
+                                                .reportingManagerWithName,
+                                            isManager:
+                                                dataList![index].isManager == 0
+                                                    ? 'no'
+                                                    : 'yes',
+                                          ),
+                                        );
+                                      });
+                                }
+                              }),
+                            )
+                          ],
+                        ),
+                      ),
+                      Center(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            Expanded(
+                              child: Builder(builder: (
+                                BuildContext context,
+                              ) {
+                                if (dataList == null || dataList!.isEmpty) {
+                                  return const Center(
+                                      child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // Image.asset(
+                                      //   'assets/loaderr.gif',
+                                      //   height: 200,
+                                      //   width: 130,
+                                      // ),
+                                      Text('No records found')
+                                    ],
+                                  ));
+                                } else {
+                                  return ListView.builder(
+                                      itemCount: dataList!.length,
+                                      itemBuilder: (context, index) {
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            String firstName =
+                                                dataList![index].firstName;
+                                            String lastName =
+                                                dataList![index].lastName;
+                                            String email =
+                                                dataList![index].email;
+                                            String mobileNo =
+                                                dataList![index].mobileNo;
+                                            int isManager =
+                                                dataList![index].isManager;
+                                            int id = dataList![index].id;
+                                            int reportingManagerId =
+                                                dataList![index]
+                                                    .reportingManager;
+                                            String reportingManagerWithName =
+                                                dataList![index]
+                                                    .reportingManagerWithName;
+
+                                            if (AppController.role ==
+                                                'hrManager') {
+                                              Get.to(HRUpdateUserScreen(
+                                                title: 'Update User',
+                                                id: id,
+                                                firstName: firstName,
+                                                lastName: lastName,
+                                                email: email,
+                                                mobileNo: mobileNo,
+                                                isManager: isManager.toString(),
+                                                reportingManagerId:
+                                                    reportingManagerId,
+                                                reportingManagerWithName:
+                                                    reportingManagerWithName,
+                                              ));
+                                            }
+                                          },
+                                          child: HRUsersCard(
+                                            ht: height,
+                                            wd: width,
+                                            duration: 200,
+                                            name:
+                                                ' ${dataList![index].firstName} ${dataList![index].lastName}',
+                                            email: dataList![index].email,
+                                            mobile: dataList![index].mobileNo,
+                                            reportingManager: dataList![index]
+                                                .reportingManagerWithName,
+                                            isManager:
+                                                dataList![index].isManager == 0
+                                                    ? 'no'
+                                                    : 'yes',
+                                          ),
+                                        );
+                                      });
+                                }
+                              }),
+                            )
+                          ],
+                        ),
+                      ),
+                      Center(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            Expanded(
+                              child: Builder(builder: (
+                                BuildContext context,
+                              ) {
+                                if (dataList == null || dataList!.isEmpty) {
+                                  return const Center(
+                                      child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // Image.asset(
+                                      //   'assets/loaderr.gif',
+                                      //   height: 200,
+                                      //   width: 130,
+                                      // ),
+                                      Text('No records found')
+                                    ],
+                                  ));
+                                } else {
+                                  return ListView.builder(
+                                      itemCount: dataList!.length,
+                                      itemBuilder: (context, index) {
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            String firstName =
+                                                dataList![index].firstName;
+                                            String lastName =
+                                                dataList![index].lastName;
+                                            String email =
+                                                dataList![index].email;
+                                            String mobileNo =
+                                                dataList![index].mobileNo;
+                                            int isManager =
+                                                dataList![index].isManager;
+                                            int id = dataList![index].id;
+                                            int reportingManagerId =
+                                                dataList![index]
+                                                    .reportingManager;
+                                            String reportingManagerWithName =
+                                                dataList![index]
+                                                    .reportingManagerWithName;
+                                            if (AppController.role ==
+                                                'hrManager') {
+                                              Get.to(HRUpdateUserScreen(
+                                                title: 'Update User',
+                                                id: id,
+                                                firstName: firstName,
+                                                lastName: lastName,
+                                                email: email,
+                                                mobileNo: mobileNo,
+                                                isManager: isManager.toString(),
+                                                reportingManagerId:
+                                                    reportingManagerId,
+                                                reportingManagerWithName:
+                                                    reportingManagerWithName,
+                                              ));
+                                            }
+                                          },
+                                          child: HRUsersCard(
+                                            ht: height,
+                                            wd: width,
+                                            duration: 200,
+                                            name:
+                                                ' ${dataList![index].firstName} ${dataList![index].lastName}',
+                                            email: dataList![index].email,
+                                            mobile: dataList![index].mobileNo,
+                                            reportingManager: dataList![index]
+                                                .reportingManagerWithName,
+                                            isManager:
+                                                dataList![index].isManager == 0
+                                                    ? 'no'
+                                                    : 'yes',
+                                          ),
+                                        );
+                                      });
+                                }
+                              }),
+                            )
+                          ],
+                        ),
+                      ),
+                      Center(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            Expanded(
+                              child: Builder(builder: (
+                                BuildContext context,
+                              ) {
+                                if (dataList == null || dataList!.isEmpty) {
+                                  return const Center(
+                                      child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // Image.asset(
+                                      //   'assets/loaderr.gif',
+                                      //   height: 200,
+                                      //   width: 130,
+                                      // ),
+                                      Text('No records found')
+                                    ],
+                                  ));
+                                } else {
+                                  return ListView.builder(
+                                      itemCount: dataList!.length,
+                                      itemBuilder: (context, index) {
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            String firstName =
+                                                dataList![index].firstName;
+                                            String lastName =
+                                                dataList![index].lastName;
+                                            String email =
+                                                dataList![index].email;
+                                            String mobileNo =
+                                                dataList![index].mobileNo;
+                                            int isManager =
+                                                dataList![index].isManager;
+                                            int id = dataList![index].id;
+                                            int reportingManagerId =
+                                                dataList![index]
+                                                    .reportingManager;
+                                            String reportingManagerWithName =
+                                                dataList![index]
+                                                    .reportingManagerWithName;
+
+                                            if (AppController.role ==
+                                                'hrManager') {
+                                              Get.to(HRUpdateUserScreen(
+                                                title: 'Update User',
+                                                id: id,
+                                                firstName: firstName,
+                                                lastName: lastName,
+                                                email: email,
+                                                mobileNo: mobileNo,
+                                                isManager: isManager.toString(),
+                                                reportingManagerId:
+                                                    reportingManagerId,
+                                                reportingManagerWithName:
+                                                    reportingManagerWithName,
+                                              ));
+                                            } else if (AppController.role ==
+                                                'superAdmin') {
+                                              Get.to(VerifyUsersScreen(
+                                                title: 'Verify User',
+                                                firstName: firstName,
+                                                lastName: lastName,
+                                                email: email,
+                                                mobileNo: mobileNo,
+                                                reportingManager:
+                                                    reportingManagerWithName,
+                                                isManager: isManager,
+                                                userId: id,
+                                              ));
+                                            }
+                                          },
+                                          child: HRUsersCard(
+                                            ht: height,
+                                            wd: width,
+                                            duration: 200,
+                                            name:
+                                                ' ${dataList![index].firstName} ${dataList![index].lastName}',
+                                            email: dataList![index].email,
+                                            mobile: dataList![index].mobileNo,
+                                            reportingManager: dataList![index]
+                                                .reportingManagerWithName,
+                                            isManager:
+                                                dataList![index].isManager == 0
+                                                    ? 'no'
+                                                    : 'yes',
+                                          ),
+                                        );
+                                      });
+                                }
+                              }),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+        //
       ]),
     );
   }

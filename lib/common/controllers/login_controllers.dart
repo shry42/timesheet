@@ -21,7 +21,7 @@ class loginController extends GetxController {
       Uri.parse('${ApiService.baseUrl}/api/auth/login'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
-        "email": email.value,
+        "employeeId": email.value,
         "password": password.value,
       }),
     );

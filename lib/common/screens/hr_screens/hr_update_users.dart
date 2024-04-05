@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_updateUserController.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
 import 'package:timesheet/common/controllers/hr_delete_controller.dart';
@@ -111,90 +112,93 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
                     ),
                   ),
                   const SizedBox(width: 20),
-                  Shimmer(
-                    duration: const Duration(seconds: 2),
-                    interval: const Duration(milliseconds: 20),
-                    color: Colors.white,
-                    colorOpacity: 1,
-                    enabled: true,
-                    direction: const ShimmerDirection.fromLTRB(),
-                    child: GestureDetector(
-                      onTap: () async {
-                        Get.defaultDialog(
-                          backgroundColor:
-                              const Color.fromARGB(255, 195, 215, 196),
-                          title: 'Delete Reason',
-                          content: DeleteReasonDialogBox(
-                            userId: widget.id,
+                  if (AppController.role == 'hrManager' ||
+                      AppController.role == 'superAdmin')
+                    Shimmer(
+                      duration: const Duration(seconds: 2),
+                      interval: const Duration(milliseconds: 20),
+                      color: Colors.white,
+                      colorOpacity: 1,
+                      enabled: true,
+                      direction: const ShimmerDirection.fromLTRB(),
+                      child: GestureDetector(
+                        onTap: () async {
+                          Get.defaultDialog(
+                            backgroundColor:
+                                const Color.fromARGB(255, 195, 215, 196),
+                            title: 'Delete Reason',
+                            content: DeleteReasonDialogBox(
+                              userId: widget.id,
+                            ),
+                          );
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 90,
+                          decoration: BoxDecoration(
+                              border: Border.all(),
+                              color: Colors.white70,
+                              borderRadius: BorderRadius.circular(6)),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  'Delete user',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 12),
+                                ),
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 90,
-                        decoration: BoxDecoration(
-                            border: Border.all(),
-                            color: Colors.white70,
-                            borderRadius: BorderRadius.circular(6)),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: Text(
-                                'Delete user',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 12),
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                     ),
-                  ),
                   const Spacer(),
-                  Shimmer(
-                    duration: const Duration(seconds: 2),
-                    // This is NOT the default value. Default value: Duration(seconds: 0)
-                    interval: const Duration(milliseconds: 20),
-                    // This is the default value
-                    color: Colors.white,
-                    // This is the default value
-                    colorOpacity: 1,
-                    // This is the default value
-                    enabled: true,
-                    // This is the default value
-                    direction: const ShimmerDirection.fromLTRB(),
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.to(HRUserAssignAddDepartmentList(
-                          title: 'User Department list',
-                          id: widget.id,
-                        ));
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 115,
-                        decoration: BoxDecoration(
-                            border: Border.all(),
-                            color: Colors.white70,
-                            borderRadius: BorderRadius.circular(6)),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: Text(
-                                'view/edit Department',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 12),
+                  if (AppController.role == 'hrManager')
+                    Shimmer(
+                      duration: const Duration(seconds: 2),
+                      // This is NOT the default value. Default value: Duration(seconds: 0)
+                      interval: const Duration(milliseconds: 20),
+                      // This is the default value
+                      color: Colors.white,
+                      // This is the default value
+                      colorOpacity: 1,
+                      // This is the default value
+                      enabled: true,
+                      // This is the default value
+                      direction: const ShimmerDirection.fromLTRB(),
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.to(HRUserAssignAddDepartmentList(
+                            title: 'User Department list',
+                            id: widget.id,
+                          ));
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 115,
+                          decoration: BoxDecoration(
+                              border: Border.all(),
+                              color: Colors.white70,
+                              borderRadius: BorderRadius.circular(6)),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  'view/edit Department',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 12),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
                   const SizedBox(width: 5),
                 ],
               ),

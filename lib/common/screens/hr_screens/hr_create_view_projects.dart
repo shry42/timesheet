@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/get_all_projects_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/get_my_team_users_by_deptid_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_my_projects_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_create_project.dart';
@@ -25,6 +27,11 @@ class _HRMyProjectsState extends State<HRMyProjects> {
 
   final HRMyProjectsController hmpc = HRMyProjectsController();
 
+  final AllProjectsController apc = AllProjectsController();
+
+  final GetMyTeamUsersByDeptIdController myTeamCont =
+      GetMyTeamUsersByDeptIdController();
+
   List<dynamic>? dataList;
   List? searchDataList;
   List? mainDataList;
@@ -33,15 +40,26 @@ class _HRMyProjectsState extends State<HRMyProjects> {
   void initState() {
     dataList; //Initialize as empty or else data will not be displayed until tapped on searchbar
     hmpc;
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      await hmpc.myProjects().then((value) {
-        setState(() {
-          dataList = value;
-          mainDataList = value;
+    apc;
+    if (AppController.role == 'superAdmin') {
+      WidgetsBinding.instance?.addPostFrameCallback((_) async {
+        await apc.allProjects().then((value) {
+          setState(() {
+            dataList = value;
+            mainDataList = value;
+          });
         });
       });
-    });
-
+    } else {
+      WidgetsBinding.instance?.addPostFrameCallback((_) async {
+        await hmpc.myProjects().then((value) {
+          setState(() {
+            dataList = value;
+            mainDataList = value;
+          });
+        });
+      });
+    }
     super.initState();
   }
 
@@ -253,6 +271,10 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                                 dataList![index].endDate;
                                             String? remark =
                                                 dataList![index].remark;
+                                            int deptId =
+                                                dataList![index].departmentId;
+                                            // myTeamCont.departmentId.value =
+                                            //     dataList![index].departmentId;
                                             if (AppController.role ==
                                                 'hrManager') {
                                               Get.to(HRUpdateProject(
@@ -264,6 +286,7 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                                 endDate: endDate,
                                                 projectId: projectId,
                                                 remark: remark,
+                                                departmentId: deptId,
                                               ));
                                             }
                                           },
@@ -340,6 +363,8 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                                 dataList![index].startDate;
                                             String endDate =
                                                 dataList![index].endDate;
+                                            int deptId =
+                                                dataList![index].departmentId;
 
                                             if (AppController.role ==
                                                 'hrManager') {
@@ -351,6 +376,7 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                                 startDate: startDate,
                                                 endDate: endDate,
                                                 projectId: projectId,
+                                                departmentId: deptId,
                                               ));
                                             }
                                           },
@@ -427,6 +453,8 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                                 dataList![index].startDate;
                                             String endDate =
                                                 dataList![index].endDate;
+                                            int deptId =
+                                                dataList![index].departmentId;
 
                                             if (AppController.role ==
                                                 'hrManager') {
@@ -438,6 +466,7 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                                 startDate: startDate,
                                                 endDate: endDate,
                                                 projectId: projectId,
+                                                departmentId: deptId,
                                               ));
                                             }
                                           },
@@ -521,6 +550,10 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                                 .toString();
                                             String? remark =
                                                 dataList![index].remark;
+                                            myTeamCont.departmentId.value =
+                                                dataList![index].departmentId;
+                                            int deptId =
+                                                dataList![index].departmentId;
 
                                             if (AppController.role ==
                                                 'hrManager') {
@@ -533,6 +566,7 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                                 startDate: startDate,
                                                 endDate: endDate,
                                                 projectId: projectId,
+                                                departmentId: deptId,
                                               ));
                                             } else if (AppController.role ==
                                                 'superAdmin') {

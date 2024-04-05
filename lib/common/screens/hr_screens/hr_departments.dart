@@ -89,15 +89,10 @@ class _DepartmentsHRScreenState extends State<DepartmentsHRScreen> {
                 const Spacer(),
                 Shimmer(
                   duration: const Duration(seconds: 2),
-                  // This is NOT the default value. Default value: Duration(seconds: 0)
                   interval: const Duration(milliseconds: 20),
-                  // This is the default value
                   color: Colors.white,
-                  // This is the default value
                   colorOpacity: 1,
-                  // This is the default value
                   enabled: true,
-                  // This is the default value
                   direction: const ShimmerDirection.fromLTRB(),
                   child: GestureDetector(
                     onTap: () {

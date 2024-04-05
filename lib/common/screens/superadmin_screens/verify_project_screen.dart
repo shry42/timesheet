@@ -160,7 +160,7 @@ class _VerifyProjectScreenState extends State<VerifyProjectScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         await VerifyProjectController()
-                            .verifyProject(widget.projectId!.toInt(), '1');
+                            .verifyProject(widget.projectId!.toInt(), '2');
                         if (AppController.message != null) {
                           Get.defaultDialog(
                             title: "Success!",

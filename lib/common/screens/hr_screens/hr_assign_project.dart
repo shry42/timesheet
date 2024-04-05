@@ -3,6 +3,7 @@ import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:timesheet/common/controllers/hr_controllers/get_my_team_users_by_deptid_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_myteam_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_projects_users.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_add_department_controller.dart';
@@ -11,11 +12,15 @@ import 'package:timesheet/common/controllers/hr_controllers/hr_delete_project_us
 
 class HRUserAssignAddProjectList extends StatefulWidget {
   HRUserAssignAddProjectList(
-      {Key? key, required this.title, this.projectId, required this.code})
+      {Key? key,
+      required this.title,
+      this.projectId,
+      required this.code,
+      required this.departmentId})
       : super(key: key);
 
   final String title, code;
-  final int? projectId;
+  final int? projectId, departmentId;
 
   @override
   State<HRUserAssignAddProjectList> createState() =>
@@ -37,8 +42,12 @@ class _HRUserAssignAddProjectListState
 
   AddDepartmentController adc = AddDepartmentController();
 
+  final GetMyTeamUsersByDeptIdController gmtu =
+      GetMyTeamUsersByDeptIdController();
+
   getData() async {
-    myTeamList = await mtlc.getMyTeamList();
+    // myTeamList = await mtlc.getMyTeamList();
+    myTeamList = await gmtu.getAllDepartments(widget.departmentId!.toInt());
     setState(() {});
     // projectUsersList = puc.getProjectsUsers(widget.projectId!.toInt());
   }
@@ -146,7 +155,7 @@ class _HRUserAssignAddProjectListState
                         buttonIcon: const Icon(Icons.arrow_drop_down_outlined),
                       ),
                     ),
-                    SizedBox(width: 25),
+                    const SizedBox(width: 25),
                     Container(
                       height: 42,
                       width: 120,
@@ -193,6 +202,7 @@ class _HRUserAssignAddProjectListState
                       children: _selectedUserIds.map((id) {
                         final name = myTeamList
                             .firstWhere((name) => name.id == int.parse(id));
+
                         return Chip(
                           label: Text('${name.firstName} ${name.lastName}'),
                           onDeleted: () {

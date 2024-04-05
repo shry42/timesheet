@@ -8,6 +8,7 @@ import 'package:timesheet/common/screens/hr_screens/hr_create_view_tasks.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_departments.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_profile_settings.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_users_list.dart';
+import 'package:timesheet/common/screens/hr_screens/my_timesheet.dart';
 
 class BottomNavHR extends StatefulWidget {
   final int initialIndex;
@@ -30,6 +31,9 @@ class _BottomNavHRState extends State<BottomNavHR> {
     const DepartmentsHRScreen(title: 'Departments'),
     const HRMyTasks(title: 'Tasks List'),
     const HRMyAttributes(title: 'Attributes List'),
+    const MyTimesheetScreen(
+      title: 'My TimeSheet',
+    ),
     const HRSettingsScreen(title: 'Profile'),
   ];
 
@@ -59,6 +63,7 @@ class _BottomNavHRState extends State<BottomNavHR> {
             Icon(Icons.list_alt_outlined, size: 26, color: Colors.white),
             Icon(Icons.task_outlined, size: 26, color: Colors.white),
             Icon(Icons.attractions, size: 26, color: Colors.white),
+            Icon(Icons.desktop_mac_rounded, size: 26, color: Colors.white),
             Icon(Icons.person, size: 26, color: Colors.white),
           ],
           onTap: (index) {

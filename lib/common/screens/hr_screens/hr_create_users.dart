@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
-import 'package:timesheet/common/controllers/hr_controllers/getall_verified_departemnets.dart';
+import 'package:timesheet/common/controllers/hr_controllers/get_users_dept_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_create_user_controller.dart';
-import 'package:timesheet/common/controllers/hr_controllers/hr_updateUserController.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
 import 'package:timesheet/common/models/hr_models/hr_users_model.dart';
 
@@ -46,7 +44,9 @@ class _HRCreateUsersState extends State<HRCreateUsers> {
   dynamic isManager;
   dynamic reportingManagerId;
 
-  final AllDepartmentList adl = AllDepartmentList();
+  // final AllDepartmentList adl = AllDepartmentList();  now only need depts by userId not all depts
+
+  final UsersDepartmentController udc = UsersDepartmentController();
 
   final CreateUserController cuc = CreateUserController();
 
@@ -55,9 +55,14 @@ class _HRCreateUsersState extends State<HRCreateUsers> {
   List<dynamic> _selectedDepartmentIds = [];
   List<dynamic> deptNames = [];
   getData() async {
-    await adl.getAllDepartments();
+    // await adl.getAllDepartments();
     hrUserListObj = HRUsersController.managersList;
-    deptNames = AllDepartmentList.verifiedDepartmentList;
+    // deptNames = AllDepartmentList.verifiedDepartmentList;
+    setState(() {});
+  }
+
+  getDeptNames() async {
+    deptNames = await udc.getAllDepartments(reportingManagerId);
     setState(() {});
   }
 
@@ -332,6 +337,7 @@ class _HRCreateUsersState extends State<HRCreateUsers> {
                 onChanged: (value) {
                   setState(() {
                     reportingManagerId = value!;
+                    getDeptNames();
                   });
                 },
               ),
@@ -388,7 +394,7 @@ class _HRCreateUsersState extends State<HRCreateUsers> {
                           (dept) => MultiSelectItem<String>(
                               // dept.id,
                               dept.id.toString(),
-                              dept.name),
+                              dept.deptName),
                         )
                         .toList(),
                     initialValue: [],
@@ -425,7 +431,7 @@ class _HRCreateUsersState extends State<HRCreateUsers> {
                       final dept = deptNames
                           .firstWhere((dept) => dept.id == int.parse(deptId));
                       return Chip(
-                        label: Text(dept.name),
+                        label: Text(dept.deptName),
                         onDeleted: () {
                           setState(() {
                             _selectedDepartmentIds.remove(deptId);

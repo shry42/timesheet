@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
+import 'package:timesheet/common/controllers/app_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/delete_task_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_update_task_controller.dart';
 
 class HRUpdateTasks extends StatefulWidget {
@@ -78,6 +81,55 @@ class _HRUpdateTasksState extends State<HRUpdateTasks> {
                     ),
                   ),
                   const Spacer(),
+                  Shimmer(
+                    duration: const Duration(seconds: 2),
+                    interval: const Duration(milliseconds: 20),
+                    color: Colors.white,
+                    colorOpacity: 1,
+                    enabled: true,
+                    direction: const ShimmerDirection.fromLTRB(),
+                    child: GestureDetector(
+                      onTap: () async {
+                        await DeleteTaskController().deleteTask(widget.taskId);
+                        if (AppController.message != null) {
+                          Get.defaultDialog(
+                            title: "Success!",
+                            middleText: "${AppController.message}",
+                            textConfirm: "OK",
+                            confirmTextColor: Colors.white,
+                            onConfirm: () async {
+                              AppController.setmessage(null);
+                              Get.offAll(const BottomNavHR(
+                                initialIndex: 3,
+                              ));
+                            },
+                          );
+                          return;
+                        }
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(6)),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Delete Task',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(width: 10),
                 ],
               ),

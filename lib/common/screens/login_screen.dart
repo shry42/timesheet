@@ -149,14 +149,14 @@ class LoginPage extends StatelessWidget {
                                           },
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
-                                              hintText: "email",
+                                              hintText: "Employee Id",
                                               hintStyle: TextStyle(
                                                   color: Colors.grey[700])),
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty ||
                                                 value == "") {
-                                              return 'Please enter a valid email';
+                                              return 'Please enter a valid Employee Id';
                                             }
                                             return null;
                                           },

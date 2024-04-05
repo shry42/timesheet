@@ -18,12 +18,13 @@ class HRUpdateProject extends StatefulWidget {
     required this.startDate,
     required this.endDate,
     required this.projectId,
+    required this.departmentId,
     this.remark,
   });
 
   final String title, name, code, description, startDate, endDate;
   final String? remark;
-  final int projectId;
+  final int projectId, departmentId;
 
   @override
   State<HRUpdateProject> createState() => _HRUpdateProjectState();
@@ -166,6 +167,7 @@ class _HRUpdateProjectState extends State<HRUpdateProject> {
                           title: 'User Project list',
                           projectId: widget.projectId,
                           code: widget.code,
+                          departmentId: widget.departmentId,
                         ));
                       },
                       child: Container(

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
-import 'package:timesheet/common/controllers/hr_controllers/getall_verified_departemnets.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_create_project_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/my_departments_controller.dart';
 
 class HRCreateProject extends StatefulWidget {
   HRCreateProject({
@@ -29,11 +29,14 @@ class _HRCreateProjectState extends State<HRCreateProject> {
 
   //
 
-  final AllDepartmentList adl = AllDepartmentList();
+  // final AllDepartmentList adl = AllDepartmentList()  ;   don't need all departemnet list
+  final MyDepartmentsController adl =
+      MyDepartmentsController(); // only need mydepartement list said by manish
   List<dynamic> deptNames = [];
   getData() async {
-    await adl.getAllDepartments();
-    deptNames = AllDepartmentList.verifiedDepartmentList;
+    await adl.getMyDepartments();
+    // deptNames = AllDepartmentList.verifiedDepartmentList;
+    deptNames = MyDepartmentsController.myDeptList;
     setState(() {});
   }
 
@@ -267,7 +270,7 @@ class _HRCreateProjectState extends State<HRCreateProject> {
                 items: deptNames
                     .map((dept) => DropdownMenuItem<int>(
                           value: dept.id,
-                          child: Text('${dept.name}'),
+                          child: Text('${dept.deptName}'),
                         ))
                     .toList(),
                 onChanged: (value) {

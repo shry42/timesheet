@@ -102,6 +102,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
+  flutter_page_stepper:
+    dependency: "direct main"
+    description:
+      name: flutter_page_stepper
+      sha256: "40eeb487819f0eb6f91c5cf6538306ebf62e5cf9894da95fab42a0f66ccff553"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter

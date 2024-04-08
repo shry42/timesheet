@@ -9,7 +9,7 @@ import 'package:timesheet/common/screens/hr_screens/hr_update_attributes.dart';
 import 'package:timesheet/utils/widgets/hr_cards/hr_attributes_card.dart';
 
 class MyTimesheetScreen extends StatefulWidget {
-  const MyTimesheetScreen({super.key, required this.title});
+  const MyTimesheetScreen({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -19,6 +19,8 @@ class MyTimesheetScreen extends StatefulWidget {
 final HRAttributesController hac = HRAttributesController();
 
 class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
+  DateTime? selectedDate;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +74,7 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                     direction: const ShimmerDirection.fromLTRB(),
                     child: GestureDetector(
                       onTap: () {
-                        Get.to(CreateTimesheetScreen(title: 'Fill Timesheet'));
+                        _selectDate(context);
                       },
                       child: Container(
                         height: 30,
@@ -191,5 +193,31 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
         ),
       ]),
     );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+      selectableDayPredicate: (DateTime date) {
+        // Allow only Mondays to be selected
+        return date.weekday == 1;
+      },
+    );
+    if (picked != null) {
+      if (picked.weekday == 1) {
+        // Navigate to the next screen
+        Get.to(CreateTimesheetScreen(title: 'Fill Timesheet'));
+      } else {
+        // Show a message that only Mondays are allowed
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select a Monday.'),
+          ),
+        );
+      }
+    }
   }
 }

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:timesheet/common/controllers/hr_controllers/get_task_by_department_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/hr_attributes_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_create_attribute_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_get_users_project_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/hr_my_projects_controller.dart';
 
 class CreateTimesheetScreen extends StatefulWidget {
   CreateTimesheetScreen({
@@ -23,15 +26,33 @@ class _CreateTimesheetScreenState extends State<CreateTimesheetScreen> {
 
   //
 
-  getUsersProjectsController upc = getUsersProjectsController();
+  // getUsersProjectsController upc = getUsersProjectsController();
+  HRMyProjectsController mpc = HRMyProjectsController();
+  final GetTaskByDeptIdController gtbydc = GetTaskByDeptIdController();
+  final HRAttributesController ac = HRAttributesController();
   List<dynamic> projectList = [];
   List<dynamic> taskList = [];
   List<dynamic> attributesList = [];
 
+  int? departmentId;
+  int? taskId;
+  int? attributeId;
+
   getData() async {
-    await upc.getUsersProjects();
+    await mpc.myProjects();
+    projectList = HRMyProjectsController.myProjectList;
+    attributesList = await ac.attributes();
     // deptNames = AllDepartmentList.verifiedDepartmentList;
     setState(() {});
+  }
+
+  getTaskData() async {
+    taskList = [];
+    taskList =
+        await GetTaskByDeptIdController.getTasksByDepId(departmentId!.toInt());
+    // print(taskList);
+    setState(() {});
+    taskList;
   }
 
   final CreateAttributeController cac = Get.put(CreateAttributeController());
@@ -130,96 +151,81 @@ class _CreateTimesheetScreenState extends State<CreateTimesheetScreen> {
           const SizedBox(height: 30),
           Column(children: [
             Padding(
-              //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-              child: Container(
-                height: 40,
-                child: TextFormField(
-                  // controller: emailController,
-                  controller: name,
-                  // initialValue: widget.firstName,
-                  onChanged: (value) {
-                    // AppController.setemailId(emailController.text);
-                    // c.userName.value = emailController.text;
-                  },
-                  decoration: InputDecoration(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    labelText: 'Project',
-                    // hintText: 'username',
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+              child: DropdownButtonFormField<int>(
+                decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter project name";
-                    }
-                    return null;
-                  },
+                  labelText: 'Project Name',
                 ),
+                // value: widget.reportingManagerId,
+                items: projectList
+                    .map((project) => DropdownMenuItem<int>(
+                          value: project.id,
+                          child: Text('${project.name}'),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    departmentId = projectList
+                        .firstWhere((project) => project.id == value)
+                        .departmentId;
+                    getTaskData();
+                  });
+                },
               ),
             ),
             Padding(
-              //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-              child: Container(
-                height: 40,
-                child: TextFormField(
-                  // controller: emailController,
-                  controller: name,
-                  // initialValue: widget.firstName,
-                  onChanged: (value) {
-                    // AppController.setemailId(emailController.text);
-                    // c.userName.value = emailController.text;
-                  },
-                  decoration: InputDecoration(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    labelText: 'Task',
-                    // hintText: 'username',
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+              child: DropdownButtonFormField<int>(
+                decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter task name";
-                    }
-                    return null;
-                  },
+                  labelText: 'Task',
                 ),
+                // value: widget.reportingManagerId,
+                items: taskList
+                    .map((task) => DropdownMenuItem<int>(
+                          value: task.id,
+                          child: Text('${task.task}'),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    taskId = value;
+                  });
+                },
               ),
             ),
             Padding(
-              //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-              child: Container(
-                height: 40,
-                child: TextFormField(
-                  // controller: emailController,
-                  controller: name,
-                  // initialValue: widget.firstName,
-                  onChanged: (value) {
-                    // AppController.setemailId(emailController.text);
-                    // c.userName.value = emailController.text;
-                  },
-                  decoration: InputDecoration(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    labelText: 'Attributes',
-                    // hintText: 'username',
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+              child: DropdownButtonFormField<int>(
+                decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter task name";
-                    }
-                    return null;
-                  },
+                  labelText: 'Attributes',
                 ),
+                // value: widget.reportingManagerId,
+                items: attributesList
+                    .map((attribute) => DropdownMenuItem<int>(
+                          value: attribute.id,
+                          child: Text('${attribute.name}'),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    attributeId = value;
+                  });
+                },
               ),
             ),
             const SizedBox(height: 20),
@@ -236,9 +242,9 @@ class _CreateTimesheetScreenState extends State<CreateTimesheetScreen> {
                       ),
                       height: 30,
                       width: 60,
-                      child: Center(child: const Text('Mon')),
+                      child: const Center(child: Text('Mon')),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Container(
                       // color: Colors.,
                       height: 30,

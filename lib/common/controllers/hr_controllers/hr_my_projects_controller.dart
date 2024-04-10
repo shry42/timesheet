@@ -22,6 +22,15 @@ class HRMyProjectsController extends GetxController {
       List<dynamic> data = result['data'];
       myProjectList = data.map((e) => HRMyProjectsModel.fromJson(e)).toList();
       return myProjectList;
+    } else if (response.statusCode != 200) {
+      Map<String, dynamic> result = json.decode(response.body);
+      String message = result['message'];
+      Get.defaultDialog(
+          title: 'Oops!',
+          middleText: 'create Project first $message',
+          onConfirm: () {
+            Get.back();
+          });
     }
   }
 }

@@ -196,9 +196,17 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    DateTime initialDate = DateTime.now();
+
+    // If today is not Monday, find the next Monday
+    if (initialDate.weekday != 1) {
+      int daysUntilNextMonday = (1 - initialDate.weekday + 7) % 7;
+      initialDate = initialDate.add(Duration(days: daysUntilNextMonday));
+    }
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: initialDate,
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
       selectableDayPredicate: (DateTime date) {
@@ -207,17 +215,8 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
       },
     );
     if (picked != null) {
-      if (picked.weekday == 1) {
-        // Navigate to the next screen
-        Get.to(CreateTimesheetScreen(title: 'Fill Timesheet'));
-      } else {
-        // Show a message that only Mondays are allowed
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select a Monday.'),
-          ),
-        );
-      }
+      // Navigate to the next screen
+      Get.to(CreateTimesheetScreen(title: 'Fill Timesheet'));
     }
   }
 }

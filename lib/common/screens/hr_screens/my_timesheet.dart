@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_attributes_controller.dart';
@@ -62,19 +63,14 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                 if (AppController.role == 'hrManager')
                   Shimmer(
                     duration: const Duration(seconds: 2),
-                    // This is NOT the default value. Default value: Duration(seconds: 0)
                     interval: const Duration(milliseconds: 20),
-                    // This is the default value
                     color: Colors.white,
-                    // This is the default value
                     colorOpacity: 1,
-                    // This is the default value
                     enabled: true,
-                    // This is the default value
                     direction: const ShimmerDirection.fromLTRB(),
                     child: GestureDetector(
                       onTap: () {
-                        _selectDate(context);
+                        _selectDate(context, selectedDate ?? DateTime.now());
                       },
                       child: Container(
                         height: 30,
@@ -195,18 +191,18 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
     );
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(BuildContext context, DateTime selectedDate) async {
     DateTime initialDate = DateTime.now();
 
     // If today is not Monday, find the next Monday
-    if (initialDate.weekday != 1) {
-      int daysUntilNextMonday = (1 - initialDate.weekday + 7) % 7;
-      initialDate = initialDate.add(Duration(days: daysUntilNextMonday));
+    if (selectedDate.weekday != 1) {
+      int daysUntilNextMonday = (1 - selectedDate.weekday + 7) % 7;
+      selectedDate = selectedDate.add(Duration(days: daysUntilNextMonday));
     }
 
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: initialDate,
+      initialDate: selectedDate,
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
       selectableDayPredicate: (DateTime date) {
@@ -214,9 +210,36 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
         return date.weekday == 1;
       },
     );
+
     if (picked != null) {
-      // Navigate to the next screen
-      Get.to(CreateTimesheetScreen(title: 'Fill Timesheet'));
+      // Create a new DateTime object with the same date as picked but time set to 00:00:00
+      DateTime trimmedDate = DateTime(picked.year, picked.month, picked.day);
+
+      // Format the date to '2024-04-01' format
+      String formattedDate = DateFormat('yyyy-MM-dd').format(trimmedDate);
+
+      // Get the next 5 dates in sequence
+      List<DateTime> nextDates = getNextNDates(picked, 6);
+
+      // Format each date to '2024-04-01' format
+      List<String> formattedNextDates = nextDates.map((date) {
+        return DateFormat('yyyy-MM-dd').format(date);
+      }).toList();
+
+      // Navigate to the next screen, passing the picked date and the next 5 dates
+      Get.to(CreateTimesheetScreen(
+        title: 'Fill Timesheet',
+        date1: formattedDate,
+        date2: formattedNextDates[1],
+        date3: formattedNextDates[2],
+        date4: formattedNextDates[3],
+        date5: formattedNextDates[4],
+        date6: formattedNextDates[5],
+      ));
     }
+  }
+
+  List<DateTime> getNextNDates(DateTime date, int n) {
+    return List.generate(n, (i) => date.add(Duration(days: i)));
   }
 }

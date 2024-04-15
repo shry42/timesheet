@@ -67,8 +67,8 @@ class _Dialog_create_timesheet_screenState
     date2Cont.text = widget.date2;
     date3Cont.text = widget.date3;
     date4Cont.text = widget.date4;
-    date5Cont.text = widget.date1;
-    date6Cont.text = widget.date1;
+    date5Cont.text = widget.date5;
+    date6Cont.text = widget.date6;
 
     getData();
     super.initState();
@@ -93,31 +93,65 @@ class _Dialog_create_timesheet_screenState
   //
 
   void addNewTimesheetEntry() {
-    // String monValue = monCont.text;
-    // String tueValue = tueCont.text;
+    final monHours = int.tryParse(monCont.text) ?? 0;
+    final tueHours = int.tryParse(tueCont.text) ?? 0;
+    final wedHours = int.tryParse(wedCont.text) ?? 0;
+    final thuHours = int.tryParse(thuCont.text) ?? 0;
+    final friHours = int.tryParse(friCont.text) ?? 0;
+    final satHours = int.tryParse(satCont.text) ?? 0;
 
-    // String monHours = monValue.isNotEmpty ? monValue : '0';
-    // String tueHours = tueValue.isNotEmpty ? tueValue : '0';
+    if (monHours > 8 ||
+        tueHours > 8 ||
+        wedHours > 8 ||
+        thuHours > 8 ||
+        friHours > 8 ||
+        satHours > 8) {
+      // Show an error message if any of the day's hours exceed 8
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('day\'s hours cannot exceed ')),
+      );
+      return;
+    }
 
+    if (projectId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('please select Project')),
+      );
+      return;
+    }
+    if (taskId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('please select Task')),
+      );
+      return;
+    }
+    if (attributeId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('please select attribute')),
+      );
+      return;
+    }
+    if (descCont.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Description cannot be empty')),
+      );
+      return;
+    }
+
+    // Continue with adding the new timesheet entry
     TimesheetEntry newEntry = TimesheetEntry(
       projectId: projectId,
       taskId: taskId,
       attrId: attributeId,
-      description: 'New description', // Replace this with the description
+      departmentId: departmentId,
+      description: descCont.text,
       taskDetails: {
-        date1Cont.text:
-            monCont.text, // Replace '2023-01-02' with the actual date
-        date2Cont.text:
-            tueCont.text, // Replace '2023-01-02' with the actual date
-        date3Cont.text:
-            wedCont.text, // Replace '2023-01-02' with the actual date
-        date4Cont.text:
-            thuCont.text, // Replace '2023-01-02' with the actual date
-        date5Cont.text:
-            friCont.text, // Replace '2023-01-02' with the actual date
-        date6Cont.text:
-            satCont.text, // Replace '2023-01-02' with the actual date
-        // Add other days as needed
+        date1Cont.text: monHours.toString(),
+        date2Cont.text: tueHours.toString(),
+        date3Cont.text: wedHours.toString(),
+        date4Cont.text: thuHours.toString(),
+        date5Cont.text: friHours.toString(),
+        date6Cont.text: satHours.toString(),
       },
     );
 

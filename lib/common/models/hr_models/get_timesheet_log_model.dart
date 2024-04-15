@@ -42,4 +42,17 @@ class TimesheetEntry {
       logId: json['logId'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "projectId": projectId,
+      "taskId": taskId,
+      "attrId": attrId,
+      "taskDetails":
+          taskDetails != null ? Map<String, String>.from(taskDetails!) : null,
+      "description": description,
+      "departmentId": departmentId,
+      "logId": logId,
+    };
+  }
 }

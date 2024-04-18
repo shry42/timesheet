@@ -2,26 +2,30 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
+import 'package:timesheet/common/screens/login_screen.dart';
 import 'package:timesheet/services/api_service.dart';
 
-class AssignProjectUsesrController extends GetxController {
-  RxList selectedUserIds = [].obs;
-
-  Future assignProjectUsers(
-      int projectId, String projectCode, departmentId) async {
-    http.Response response = await http.post(
-      Uri.parse('${ApiService.baseUrl}/api/project/assignProject'),
+class VerifyAllSharedProjectController extends GetxController {
+  Future verifyAllSharedProject(int projectId, shareId, sharedTo, projectOwner,
+      departmentId, String verify, projectCode, remark) async {
+    http.Response response = await http.put(
+      Uri.parse('${ApiService.baseUrl}/api/project/verifySharedProject'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${AppController.accessToken}',
       },
-      body: json.encode({
+      body: jsonEncode({
+        //for 1 no reason,
         "projectId": projectId,
+        "shareId": shareId,
+        "verify": verify,
+        // "reason": "Nice project",
         "projectCode": projectCode,
-        "userIds": selectedUserIds.value,
-        "departmentId": departmentId
+        "sharedTo": sharedTo,
+        "projectOwner": projectOwner,
+        "departmentId": departmentId,
+        if (remark != null && remark.isNotEmpty) "reason": remark,
       }),
     );
     if (response.statusCode == 200) {
@@ -52,10 +56,7 @@ class AssignProjectUsesrController extends GetxController {
           textConfirm: "OK",
           confirmTextColor: Colors.white,
           onConfirm: () {
-            Get.offAll(const BottomNavHR(
-              initialIndex: 0,
-            ));
-            // Get.back(); // Close the dialog
+            Get.offAll(LoginPage());
           },
         );
       }

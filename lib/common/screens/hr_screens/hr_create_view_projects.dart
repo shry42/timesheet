@@ -10,6 +10,9 @@ import 'package:timesheet/common/controllers/hr_controllers/hr_my_projects_contr
 import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_create_project.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_update_projects.dart';
+import 'package:timesheet/common/screens/project_share_screens/project_shared_by_me.dart';
+import 'package:timesheet/common/screens/project_share_screens/project_shared_to_me.dart';
+import 'package:timesheet/common/screens/superadmin_screens/super_all_shared_projects_screen.dart';
 import 'package:timesheet/common/screens/superadmin_screens/verify_project_screen.dart';
 import 'package:timesheet/utils/widgets/hr_cards/hr_projects_card.dart';
 
@@ -107,23 +110,20 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                 if (AppController.role == 'hrManager')
                   Shimmer(
                     duration: const Duration(seconds: 2),
-                    // This is NOT the default value. Default value: Duration(seconds: 0)
                     interval: const Duration(milliseconds: 20),
-                    // This is the default value
                     color: Colors.white,
-                    // This is the default value
                     colorOpacity: 1,
-                    // This is the default value
                     enabled: true,
-                    // This is the default value
                     direction: const ShimmerDirection.fromLTRB(),
                     child: GestureDetector(
                       onTap: () {
-                        Get.to(HRCreateProject(title: 'Create Projects'));
+                        Get.to(const ProjectSharedByMeScreen(
+                          title: 'Project\'s shared ',
+                        ));
                       },
                       child: Container(
                         height: 30,
-                        width: 100,
+                        width: 65,
                         decoration: BoxDecoration(
                             border: Border.all(),
                             color: Colors.white70,
@@ -134,7 +134,7 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                           children: [
                             Center(
                               child: Text(
-                                'Create Projects',
+                                'Shared',
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 12),
                               ),
@@ -144,7 +144,119 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                       ),
                     ),
                   ),
-                const SizedBox(width: 10),
+
+                SizedBox(height: 10),
+                if (AppController.role == 'hrManager')
+                  Shimmer(
+                    duration: const Duration(seconds: 2),
+                    interval: const Duration(milliseconds: 20),
+                    color: Colors.white,
+                    colorOpacity: 1,
+                    enabled: true,
+                    direction: const ShimmerDirection.fromLTRB(),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(const ProjectSharedToMeScreen(
+                          title: 'Recieved Projects',
+                        ));
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 65,
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(6)),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Received',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                SizedBox(height: 10),
+                if (AppController.role == 'hrManager')
+                  Shimmer(
+                    duration: const Duration(seconds: 2),
+                    interval: const Duration(milliseconds: 20),
+                    color: Colors.white,
+                    colorOpacity: 1,
+                    enabled: true,
+                    direction: const ShimmerDirection.fromLTRB(),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(HRCreateProject(title: 'Create Projects'));
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 65,
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(6)),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Create',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                // const SizedBox(width: 10),
+                if (AppController.role == 'superAdmin')
+                  Shimmer(
+                    duration: const Duration(seconds: 2),
+                    interval: const Duration(milliseconds: 20),
+                    color: Colors.white,
+                    colorOpacity: 1,
+                    enabled: true,
+                    direction: const ShimmerDirection.fromLTRB(),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(const AllSharedProjectsScreenSuper(
+                          title: 'Verify Shared Projects',
+                        ));
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 120,
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(6)),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Verify Shared Projects',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 
 class HRProjectsCard extends StatelessWidget {
   const HRProjectsCard({
@@ -13,7 +12,10 @@ class HRProjectsCard extends StatelessWidget {
     required this.startDate,
     required this.endDate,
     required this.createdAt,
-    required this.remark,
+    this.remark,
+    this.deptName,
+    this.sharedTo,
+    this.sharedBy,
   }) : super(key: key);
 
   final double? ht;
@@ -25,22 +27,24 @@ class HRProjectsCard extends StatelessWidget {
   final String startDate;
   final String endDate;
   final String createdAt;
-  final String remark;
+  final String? remark;
+  final String? deptName;
+  final String? sharedTo;
+  final String? sharedBy;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Card(
-          margin: const EdgeInsets.symmetric(horizontal: 18),
-          elevation: 8,
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(color: Colors.white),
-            borderRadius: BorderRadius.circular(25),
-          ),
-          //  color: Color.fromARGB(243, 199, 80, 11),
-          // //color: Colors.red,
-          child: AnimatedContainer(
+    return Column(children: [
+      Card(
+        margin: const EdgeInsets.symmetric(horizontal: 18),
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.circular(25),
+        ),
+        //  color: Color.fromARGB(243, 199, 80, 11),
+        // //color: Colors.red,
+        child: AnimatedContainer(
             duration: Duration(milliseconds: duration),
             height: ht,
             width: wd,
@@ -56,133 +60,193 @@ class HRProjectsCard extends StatelessWidget {
             child: SingleChildScrollView(
               // physics: const NeverScrollableScrollPhysics(),
               child: Column(children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'Name   :   $name',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (name != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Name   :   $name',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'Description :  $description',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (description != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Description :  $description',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'Code :  $code',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (code != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Code :  $code',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'StartDate :  $startDate',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (startDate != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'StartDate :  $startDate',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'endDate :  $endDate',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (endDate != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'endDate :  $endDate',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'CreatedAt :  $createdAt',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (createdAt != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'CreatedAt :  $createdAt',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'Remark :  $remark',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (remark != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Remark :  $remark',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                if (deptName != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Department  :  $deptName',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (sharedTo != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Shared To :  $sharedTo',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (sharedBy != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Shared By :  $sharedBy',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 const SizedBox(height: 10),
               ]),
-              //
+            )
+            //
             ),
-          ),
-        ),
-        const SizedBox(height: 10),
-      ],
-    );
+      ),
+      SizedBox(height: 10),
+    ]);
   }
 }

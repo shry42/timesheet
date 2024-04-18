@@ -6,10 +6,12 @@ import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/get_timesheet_progress_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_attributes_controller.dart';
 import 'package:timesheet/common/screens/hr_screens/create_timesheet.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_update_tasks.dart';
 import 'package:timesheet/utils/widgets/hr_cards/hr_tasks_card.dart';
+import 'package:timesheet/utils/widgets/timesheet_log_cards.dart';
 
 class MyTimesheetScreen extends StatefulWidget {
   const MyTimesheetScreen({Key? key, required this.title}) : super(key: key);
@@ -21,12 +23,23 @@ class MyTimesheetScreen extends StatefulWidget {
 
 final HRAttributesController hac = HRAttributesController();
 
+final GetTimesheetStatusController gtsc = GetTimesheetStatusController();
+
 class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
   @override
   void initState() {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _selectDate(context, selectedDate ?? DateTime.now());
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    //   _selectDate(context, selectedDate ?? DateTime.now());
+    // });
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      await gtsc.getTimesheetStatusData('2024-04-15').then((value) {
+        setState(() {
+          dataList = value;
+          mainDataList = value;
+        });
+      });
     });
+
     super.initState();
   }
 
@@ -212,25 +225,58 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                                         itemCount: dataList!.length,
                                         itemBuilder: (context, index) {
                                           return GestureDetector(
-                                            onTap: () async {
-                                              int taskId = dataList![index].id;
-                                              String taskName =
-                                                  dataList![index].task;
-                                              String description =
-                                                  dataList![index].description;
-                                              String? remark =
-                                                  dataList?[index].remark;
-                                              if (AppController.role ==
-                                                  'hrManager') {
-                                                Get.to(HRUpdateTasks(
-                                                  description: description,
-                                                  taskName: taskName,
-                                                  remark: remark.toString(),
-                                                  taskId: taskId,
-                                                  title: 'Update Task',
-                                                ));
-                                              }
-                                            },
+                                              onTap: () async {
+                                                // Get.to(TimesheetLogCard(
+                                                //   Project:
+                                                //       dataList[index].attrId,
+                                                //   Task: '',
+                                                //   Attribute: '',
+                                                // ));
+                                              },
+                                              child: TimesheetLogCard(
+                                                Project: dataList[index]
+                                                    .description
+                                                    .toString(),
+                                                Task: '',
+                                                Attribute: '',
+                                              ));
+                                        });
+                                  }
+                                }),
+                              )
+                            ],
+                          ),
+                        ),
+                        Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 10),
+                              Expanded(
+                                child: Builder(builder: (
+                                  BuildContext context,
+                                ) {
+                                  if (dataList == null || dataList!.isEmpty) {
+                                    return const Center(
+                                        child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        // Image.asset(
+                                        //   'assets/loaderr.gif',
+                                        //   height: 200,
+                                        //   width: 130,
+                                        // ),
+                                        Text('No records found')
+                                      ],
+                                    ));
+                                  } else {
+                                    return ListView.builder(
+                                        itemCount: dataList!.length,
+                                        itemBuilder: (context, index) {
+                                          return GestureDetector(
+                                            onTap: () async {},
                                             child: HRTasksCard(
                                               ht: 120,
                                               wd: 400,
@@ -287,100 +333,7 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                                         itemCount: dataList!.length,
                                         itemBuilder: (context, index) {
                                           return GestureDetector(
-                                            onTap: () async {
-                                              int taskId = dataList![index].id;
-                                              String taskName =
-                                                  dataList![index].task;
-                                              String description =
-                                                  dataList![index].description;
-                                              String? remark =
-                                                  dataList?[index].remark;
-                                              if (AppController.role ==
-                                                  'hrManager') {
-                                                Get.to(HRUpdateTasks(
-                                                  description: description,
-                                                  taskName: taskName,
-                                                  remark: remark.toString(),
-                                                  taskId: taskId,
-                                                  title: 'Update Task',
-                                                ));
-                                              }
-                                            },
-                                            child: HRTasksCard(
-                                              ht: 120,
-                                              wd: 400,
-                                              duration: 400,
-                                              // id: dataList![index].id.toString(),
-                                              task: dataList![index]
-                                                  .task
-                                                  .toString(),
-                                              createdAt: dataList![index]
-                                                  .createdAt
-                                                  .toString()
-                                                  .split("T")[0],
-                                              description: dataList![index]
-                                                  .description
-                                                  .toString(),
-                                              remark: dataList![index]
-                                                  .remark
-                                                  .toString(),
-                                            ),
-                                          );
-                                        });
-                                  }
-                                }),
-                              )
-                            ],
-                          ),
-                        ),
-                        Center(
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 10),
-                              Expanded(
-                                child: Builder(builder: (
-                                  BuildContext context,
-                                ) {
-                                  if (dataList == null || dataList!.isEmpty) {
-                                    return const Center(
-                                        child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        // Image.asset(
-                                        //   'assets/loaderr.gif',
-                                        //   height: 200,
-                                        //   width: 130,
-                                        // ),
-                                        Text('No records found')
-                                      ],
-                                    ));
-                                  } else {
-                                    return ListView.builder(
-                                        itemCount: dataList!.length,
-                                        itemBuilder: (context, index) {
-                                          return GestureDetector(
-                                            onTap: () async {
-                                              int taskId = dataList![index].id;
-                                              String taskName =
-                                                  dataList![index].task;
-                                              String description =
-                                                  dataList![index].description;
-                                              String? remark =
-                                                  dataList?[index].remark;
-                                              if (AppController.role ==
-                                                  'hrManager') {
-                                                Get.to(HRUpdateTasks(
-                                                  description: description,
-                                                  taskName: taskName,
-                                                  remark: remark.toString(),
-                                                  taskId: taskId,
-                                                  title: 'Update Task',
-                                                ));
-                                              }
-                                            },
+                                            onTap: () async {},
                                             child: HRTasksCard(
                                               ht: 120,
                                               wd: 400,

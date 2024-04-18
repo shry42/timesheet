@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_task_by_department_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_attributes_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/hr_get_users_project_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_my_projects_controller.dart';
 import 'package:timesheet/common/models/hr_models/get_timesheet_log_model.dart';
 
@@ -32,7 +32,8 @@ class Dialog_create_timesheet_screen extends StatefulWidget {
 
 class _Dialog_create_timesheet_screenState
     extends State<Dialog_create_timesheet_screen> {
-  HRMyProjectsController mpc = HRMyProjectsController();
+  final getUsersProjectsController gupc = getUsersProjectsController();
+  // HRMyProjectsController mpc = HRMyProjectsController();
   final GetTaskByDeptIdController gtbydc = GetTaskByDeptIdController();
   final HRAttributesController ac = HRAttributesController();
   int? projectId;
@@ -45,8 +46,8 @@ class _Dialog_create_timesheet_screenState
   List<dynamic> attributesList = [];
 
   getData() async {
-    await mpc.myProjects();
-    projectList = HRMyProjectsController.myProjectList;
+    await gupc.getUsersProjects();
+    projectList = getUsersProjectsController.usersProjectList;
     attributesList = await ac.attributes();
     // deptNames = AllDepartmentList.verifiedDepartmentList;
     setState(() {});
@@ -185,14 +186,14 @@ class _Dialog_create_timesheet_screenState
                   // value: widget.reportingManagerId,
                   items: projectList
                       .map((project) => DropdownMenuItem<int>(
-                            value: project.id,
-                            child: Text('${project.name}'),
+                            value: project.projectId,
+                            child: Text('${project.projectName}'),
                           ))
                       .toList(),
                   onChanged: (value) {
                     setState(() {
                       departmentId = projectList
-                          .firstWhere((project) => project.id == value)
+                          .firstWhere((project) => project.projectId == value)
                           .departmentId;
                       projectId = value;
                       getTaskData();
@@ -261,7 +262,7 @@ class _Dialog_create_timesheet_screenState
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        color: Color.fromARGB(255, 175, 189, 158),
+                        color: const Color.fromARGB(255, 175, 189, 158),
                       ),
                       height: 30,
                       width: 40,
@@ -295,7 +296,7 @@ class _Dialog_create_timesheet_screenState
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        color: Color.fromARGB(255, 175, 189, 158),
+                        color: const Color.fromARGB(255, 175, 189, 158),
                       ),
                       height: 30,
                       width: 40,
@@ -334,7 +335,7 @@ class _Dialog_create_timesheet_screenState
                       width: 40,
                       child: Center(child: const Text('Wed')),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Container(
                       // color: Colors.,
                       height: 30,
@@ -354,7 +355,6 @@ class _Dialog_create_timesheet_screenState
                     ),
                   ]),
                 ),
-
                 //
               ],
             ),
@@ -377,7 +377,7 @@ class _Dialog_create_timesheet_screenState
                       width: 40,
                       child: Center(child: const Text('Thu')),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Container(
                       // color: Colors.,
                       height: 30,
@@ -488,7 +488,7 @@ class _Dialog_create_timesheet_screenState
               ),
             ),
 
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
             //

@@ -11,13 +11,13 @@ import 'package:timesheet/common/controllers/hr_controllers/hr_assign_project_us
 import 'package:timesheet/common/controllers/hr_controllers/hr_delete_project_user.dart';
 
 class HRUserAssignAddProjectList extends StatefulWidget {
-  HRUserAssignAddProjectList(
-      {Key? key,
-      required this.title,
-      this.projectId,
-      required this.code,
-      required this.departmentId})
-      : super(key: key);
+  HRUserAssignAddProjectList({
+    Key? key,
+    required this.title,
+    this.projectId,
+    required this.code,
+    required this.departmentId,
+  }) : super(key: key);
 
   final String title, code;
   final int? projectId, departmentId;
@@ -172,8 +172,10 @@ class _HRUserAssignAddProjectListState
                           // Call a method to add department
 
                           await apuc.assignProjectUsers(
-                              widget.projectId!.toInt(),
-                              widget.code.toString());
+                            widget.projectId!.toInt(),
+                            widget.code.toString(),
+                            widget.departmentId,
+                          );
                           setState(() {});
                           // }
                         },

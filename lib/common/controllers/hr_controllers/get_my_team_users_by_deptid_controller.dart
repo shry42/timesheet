@@ -11,7 +11,7 @@ class GetMyTeamUsersByDeptIdController extends GetxController {
   static List<MyTeamUsersByDeptIdModel> myTeamUsersByDeptList = [];
   // static List verifiedDepartmentList = [];
 
-  getAllDepartments(int deptId) async {
+  Future getAllDepartments(int deptId) async {
     // List<MyTeamUsersByDeptIdModel> allDepartmentList = [];
 
     http.Response response = await http.post(

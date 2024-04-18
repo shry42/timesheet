@@ -7,6 +7,7 @@ import 'package:timesheet/services/api_service.dart';
 
 class HRMyProjectsController extends GetxController {
   static List<HRMyProjectsModel> myProjectList = [];
+  static List<HRMyProjectsModel> verifiedprojectList = [];
 
   Future myProjects() async {
     http.Response response = await http.get(
@@ -21,6 +22,9 @@ class HRMyProjectsController extends GetxController {
 
       List<dynamic> data = result['data'];
       myProjectList = data.map((e) => HRMyProjectsModel.fromJson(e)).toList();
+
+      verifiedprojectList =
+          myProjectList.where((element) => element.isVerified == 1).toList();
       return myProjectList;
     } else if (response.statusCode != 200) {
       Map<String, dynamic> result = json.decode(response.body);

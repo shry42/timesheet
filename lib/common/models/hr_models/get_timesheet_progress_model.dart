@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class TimesheetModel {
   bool status;
   int resultCount;
@@ -90,9 +92,16 @@ class InProcessTimesheet {
       submitExpiryDate: json['submitExpiryDate'],
       reviewExpiryDate: json['reviewExpiryDate'],
       isActive: json['isActive'],
-      timesheetArray: (json['timesheetArray'] as List)
-          .map((e) => TimesheetArray.fromJson(e))
-          .toList(),
+      timesheetArray: json['timesheetArray'] is String
+          ? (json['timesheetArray'] as String).isNotEmpty
+              ? List<TimesheetArray>.from(
+                  jsonDecode(json['timesheetArray']!)
+                      .map((e) => TimesheetArray.fromJson(e)),
+                )
+              : []
+          : (json['timesheetArray'] as List<dynamic>)
+              .map((e) => TimesheetArray.fromJson(e))
+              .toList(),
     );
   }
 }
@@ -157,9 +166,16 @@ class RejectedTimesheet {
       submitExpiryDate: json['submitExpiryDate'],
       reviewExpiryDate: json['reviewExpiryDate'],
       isActive: json['isActive'],
-      timesheetArray: (json['timesheetArray'] as List)
-          .map((e) => TimesheetArray.fromJson(e))
-          .toList(),
+      timesheetArray: json['timesheetArray'] is String
+          ? (json['timesheetArray'] as String).isNotEmpty
+              ? List<TimesheetArray>.from(
+                  jsonDecode(json['timesheetArray']!)
+                      .map((e) => TimesheetArray.fromJson(e)),
+                )
+              : []
+          : (json['timesheetArray'] as List<dynamic>)
+              .map((e) => TimesheetArray.fromJson(e))
+              .toList(),
     );
   }
 }
@@ -224,9 +240,16 @@ class ApprovedTimesheet {
       submitExpiryDate: json['submitExpiryDate'],
       reviewExpiryDate: json['reviewExpiryDate'],
       isActive: json['isActive'],
-      timesheetArray: (json['timesheetArray'] as List)
-          .map((e) => TimesheetArray.fromJson(e))
-          .toList(),
+      timesheetArray: json['timesheetArray'] is String
+          ? (json['timesheetArray'] as String).isNotEmpty
+              ? List<TimesheetArray>.from(
+                  jsonDecode(json['timesheetArray']!)
+                      .map((e) => TimesheetArray.fromJson(e)),
+                )
+              : []
+          : (json['timesheetArray'] as List<dynamic>)
+              .map((e) => TimesheetArray.fromJson(e))
+              .toList(),
     );
   }
 }
@@ -238,7 +261,7 @@ class TimesheetArray {
   Map<String, String> taskDetails;
   String description;
   int departmentId;
-  int logId;
+  int? logId; // make logId field nullable
 
   TimesheetArray({
     required this.projectId,
@@ -247,7 +270,7 @@ class TimesheetArray {
     required this.taskDetails,
     required this.description,
     required this.departmentId,
-    required this.logId,
+    this.logId, // initialize logId field with null value
   });
 
   factory TimesheetArray.fromJson(Map<String, dynamic> json) {

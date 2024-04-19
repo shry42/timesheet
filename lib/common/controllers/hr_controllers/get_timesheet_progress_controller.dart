@@ -3,14 +3,29 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/models/hr_models/get_timesheet_log_model.dart';
+import 'package:timesheet/common/models/hr_models/get_timesheet_progress_model.dart';
 import 'package:timesheet/services/api_service.dart';
 
 class GetTimesheetStatusController extends GetxController {
   RxList<TimesheetEntry> timesheetEntries = <TimesheetEntry>[].obs;
 
-  static List<dynamic> taskDetailsList = [];
+  static List<TimesheetModel> taskDetailsList = [];
+  List<InProcessTimesheet> inProcessTimesheet = [];
+  List<RejectedTimesheet> rejectedTimesheet = [];
+  List<ApprovedTimesheet> approvedTimesheet = [];
 
-  Future<List<TimesheetEntry>> getTimesheetStatusData(String date) async {
+  // use below to acces the weekly hours data takslist
+  static List<dynamic> inProcessTaskList = [];
+  static List<dynamic> rejectedTaskList = [];
+  static List<dynamic> approvedTaskList = [];
+  //  use below fields to access the main data oustide
+  List<dynamic> inProcessDataList = [];
+  List<dynamic> rejectedDataList = [];
+  List<dynamic> approvedDataList = [];
+
+  //
+
+  Future getTimesheetStatusData(String date) async {
     List<TimesheetEntry> timesheetDataList = [];
     taskDetailsList = [];
 
@@ -25,19 +40,56 @@ class GetTimesheetStatusController extends GetxController {
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> result = json.decode(response.body);
-      List<dynamic> inProcessTimesheets = result['inProcessTimesheet'];
-      List<dynamic> rejectedTimesheet = result['rejectedTimesheet'];
-      List<dynamic> approvedTimesheet = result['approvedTimesheet'];
+      List<dynamic> dataInprocess = result['inProcessTimesheet'] ?? [];
+      List<dynamic> dataRejected = result['rejectedTimesheet'] ?? [];
+      List<dynamic> dataApproved = result['approvedTimesheet'] ?? [];
 
-      timesheetDataList = inProcessTimesheets
-          .map((entry) => TimesheetEntry.fromJson(entry))
-          .toList();
+      if (dataInprocess.isNotEmpty) {
+        inProcessTimesheet = [InProcessTimesheet.fromJson(dataInprocess[0])];
+
+        List<dynamic> inProcessTimesheetArray = inProcessTimesheet
+            .map((inProcess) => inProcess.timesheetArray)
+            .expand((array) => array)
+            .toList();
+
+        for (var entry in inProcessTimesheetArray) {
+          inProcessTaskList.add(entry.taskDetails);
+        }
+        inProcessDataList = inProcessTimesheetArray;
+      }
+
+      //
+      if (dataRejected.isNotEmpty) {
+        rejectedTimesheet =
+            dataRejected.map((e) => RejectedTimesheet.fromJson(e)).toList();
+        List<dynamic> rejectedTimesheetArray = rejectedTimesheet
+            .map((rejected) => rejected.timesheetArray)
+            .expand((array) => array)
+            .toList();
+
+        for (var entry in rejectedTimesheetArray) {
+          rejectedTaskList.add(entry.taskDetails);
+        }
+        rejectedDataList = rejectedTimesheetArray;
+      }
+
+      //
+
+      if (dataApproved.isNotEmpty) {
+        approvedTimesheet = [ApprovedTimesheet.fromJson(dataApproved[0])];
+        List<dynamic> approvedTimesheetArray = approvedTimesheet
+            .map((approved) => approved.timesheetArray)
+            .expand((array) => array)
+            .toList();
+
+        for (var entry in approvedTimesheetArray) {
+          approvedTaskList.add(entry.taskDetails);
+        }
+        approvedDataList = approvedTimesheetArray;
+      }
+
+      // return inProcessTimesheetArray;
     }
-
-    for (var entry in timesheetDataList) {
-      taskDetailsList.add(entry.taskDetails);
-    }
-
-    return timesheetDataList;
+    return inProcessDataList;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:intl/intl.dart';
@@ -8,9 +9,11 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_timesheet_progress_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_attributes_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/hr_my_projects_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/hr_tasks_controller.dart';
 import 'package:timesheet/common/screens/hr_screens/create_timesheet.dart';
-import 'package:timesheet/common/screens/hr_screens/hr_update_tasks.dart';
-import 'package:timesheet/utils/widgets/hr_cards/hr_tasks_card.dart';
+import 'package:timesheet/utils/widgets/log_data_diaolg_timesheet.dart';
+import 'package:timesheet/utils/widgets/submitted_timesheet_dialog.dart';
 import 'package:timesheet/utils/widgets/timesheet_log_cards.dart';
 
 class MyTimesheetScreen extends StatefulWidget {
@@ -21,25 +24,54 @@ class MyTimesheetScreen extends StatefulWidget {
   State<MyTimesheetScreen> createState() => _MyTimesheetScreenState();
 }
 
-final HRAttributesController hac = HRAttributesController();
-
 final GetTimesheetStatusController gtsc = GetTimesheetStatusController();
 
 class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
+  HRMyProjectsController mpc = HRMyProjectsController();
+  final HRAttributesController ac = HRAttributesController();
+  final HRTasksController allTasksCont = HRTasksController();
+
+  List<dynamic> projectList = [];
+  List<dynamic> taskList = [];
+  List<dynamic> attributesList = [];
+  List<dynamic> allTaskList = [];
+  bool pick = false;
+
+  String? date1;
+  String? date2;
+  String? date3;
+  String? date4;
+  String? date5;
+  String? date6;
+
+  getData() async {
+    projectList = await mpc.myProjects();
+  }
+
+  getAllAttributes() async {
+    attributesList = await ac.attributes();
+  }
+
+  getAllTasks() async {
+    allTaskList = await allTasksCont.tasks();
+    setState(() {});
+  }
+
   @override
   void initState() {
-    // SchedulerBinding.instance.addPostFrameCallback((_) {
-    //   _selectDate(context, selectedDate ?? DateTime.now());
-    // });
+    getData();
+    getAllAttributes();
+    getAllTasks();
+    //
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      await gtsc.getTimesheetStatusData('2024-04-15').then((value) {
+      await gtsc.getTimesheetStatusData(date1.toString()).then((value) {
         setState(() {
           dataList = value;
           mainDataList = value;
         });
       });
     });
-
+    pick = false;
     super.initState();
   }
 
@@ -97,6 +129,43 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                       direction: const ShimmerDirection.fromLTRB(),
                       child: GestureDetector(
                         onTap: () {
+                          pick = true;
+                          _selectDate(context, selectedDate ?? DateTime.now());
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 70,
+                          decoration: BoxDecoration(
+                              border: Border.all(),
+                              color: Colors.white70,
+                              borderRadius: BorderRadius.circular(6)),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Text(
+                                  'Pick Date',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 12),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(width: 10),
+                  if (AppController.role == 'hrManager')
+                    Shimmer(
+                      duration: const Duration(seconds: 2),
+                      interval: const Duration(milliseconds: 20),
+                      color: Colors.white,
+                      colorOpacity: 1,
+                      enabled: true,
+                      direction: const ShimmerDirection.fromLTRB(),
+                      child: GestureDetector(
+                        onTap: () {
                           _selectDate(context, selectedDate ?? DateTime.now());
                         },
                         child: Container(
@@ -143,30 +212,27 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                           // searchController.clear();
                         });
                       } else if (index == 1) {
-                        // setState(() {
-                        //   dataList = mainDataList
-                        //       ?.where((element) => element.isVerified == 1)
-                        //       .toList();
-                        //   searchDataList = dataList;
-                        //   // searchController.clear();
-                        // });
+                        setState(() {
+                          dataList = gtsc.approvedDataList;
+                          searchDataList = dataList;
+                          // searchController.clear();
+                        });
                       } else if (index == 2) {
-                        // setState(() {
-                        //   dataList = mainDataList
-                        //       ?.where((element) => element.isVerified == 2)
-                        //       .toList();
-                        //   searchDataList = dataList;
-                        //   // searchController.clear();
-                        // });
-                      } else if (index == 3) {
-                        // setState(() {
-                        //   dataList = mainDataList
-                        //       ?.where((element) => element.isVerified == 0)
-                        //       .toList();
-                        //   searchDataList = dataList;
-                        //   // searchController.clear();
-                        // });
+                        setState(() {
+                          dataList = gtsc.rejectedDataList;
+                          searchDataList = dataList;
+                          // searchController.clear();
+                        });
                       }
+                      // else if (index == 3) {
+                      //   // setState(() {
+                      //   //   dataList = mainDataList
+                      //   //       ?.where((element) => element.isVerified == 0)
+                      //   //       .toList();
+                      //   //   searchDataList = dataList;
+                      //   //   // searchController.clear();
+                      //   // });
+                      // }
                     },
                     contentPadding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
@@ -218,29 +284,100 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                                           MainAxisAlignment.center,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
-                                      children: [Text('No records found')],
+                                      children: [
+                                        Text(
+                                            '            No records found\nPick date above to view Timesheet')
+                                      ],
                                     ));
                                   } else {
                                     return ListView.builder(
-                                        itemCount: dataList!.length,
-                                        itemBuilder: (context, index) {
-                                          return GestureDetector(
-                                              onTap: () async {
-                                                // Get.to(TimesheetLogCard(
-                                                //   Project:
-                                                //       dataList[index].attrId,
-                                                //   Task: '',
-                                                //   Attribute: '',
-                                                // ));
-                                              },
-                                              child: TimesheetLogCard(
-                                                Project: dataList[index]
-                                                    .description
-                                                    .toString(),
-                                                Task: '',
-                                                Attribute: '',
-                                              ));
-                                        });
+                                      itemCount: dataList!.length,
+                                      itemBuilder: (context, index) {
+                                        //For Project
+                                        var project = projectList.firstWhere(
+                                          (project) =>
+                                              project.id ==
+                                              dataList[index].projectId,
+                                        );
+                                        String projectName = project != null
+                                            ? project.name
+                                            : 'Unknown Project';
+
+                                        //For attribute
+                                        var attribute =
+                                            attributesList.firstWhere(
+                                          (attribute) =>
+                                              attribute.id ==
+                                              dataList[index].attrId,
+                                        );
+                                        String attributeName = attribute != null
+                                            ? attribute.name
+                                            : 'Unknown attribute';
+
+                                        //For Tasks
+
+                                        //For attribute
+                                        var allTasks = allTaskList.firstWhere(
+                                          (task) =>
+                                              task.id == dataList[index].taskId,
+                                        );
+                                        String taskName = allTasks != null
+                                            ? allTasks.task
+                                            : 'Unknown attribute';
+
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            Get.to(
+                                              Get.defaultDialog(
+                                                barrierDismissible: false,
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 195, 215, 196),
+                                                title: 'Submitted Timesheet',
+                                                content:
+                                                    SubmittedTimesheetDialogScreen(
+                                                  projectName: projectName,
+                                                  taskName: taskName,
+                                                  attrName: attributeName,
+                                                  projectId: dataList[index]
+                                                      .projectId!
+                                                      .toInt(),
+                                                  taskId: dataList[index]
+                                                      .taskId!
+                                                      .toInt(),
+                                                  attrId: dataList[index]
+                                                      .taskId!
+                                                      .toInt(),
+                                                  description: dataList[index]
+                                                      .description
+                                                      .toString(),
+                                                  mon: dataList[index]
+                                                      .taskDetails![date1]!,
+                                                  tue: dataList[index]
+                                                      .taskDetails![date2]!,
+                                                  wed: dataList[index]
+                                                      .taskDetails![date3]!,
+                                                  thu: dataList[index]
+                                                      .taskDetails![date4]!,
+                                                  fri: dataList[index]
+                                                      .taskDetails![date5]!,
+                                                  sat: dataList[index]
+                                                      .taskDetails![date6]!,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: TimesheetLogCard(
+                                            ht: 110,
+                                            wd: 400,
+                                            duration: 400,
+                                            Project: projectName,
+                                            Task: taskName,
+                                            Attribute: attributeName,
+                                          ),
+                                        );
+                                      },
+                                    );
                                   }
                                 }),
                               )
@@ -268,36 +405,110 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                                         //   height: 200,
                                         //   width: 130,
                                         // ),
-                                        Text('No records found')
+                                        Text(
+                                            '               No records found\nPick date above to view Timesheet')
                                       ],
                                     ));
                                   } else {
                                     return ListView.builder(
-                                        itemCount: dataList!.length,
-                                        itemBuilder: (context, index) {
-                                          return GestureDetector(
-                                            onTap: () async {},
-                                            child: HRTasksCard(
-                                              ht: 120,
-                                              wd: 400,
-                                              duration: 400,
-                                              // id: dataList![index].id.toString(),
-                                              task: dataList![index]
-                                                  .task
-                                                  .toString(),
-                                              createdAt: dataList![index]
-                                                  .createdAt
-                                                  .toString()
-                                                  .split("T")[0],
-                                              description: dataList![index]
-                                                  .description
-                                                  .toString(),
-                                              remark: dataList![index]
-                                                  .remark
-                                                  .toString(),
-                                            ),
-                                          );
-                                        });
+                                      itemCount: dataList!.length,
+                                      itemBuilder: (context, index) {
+                                        //For Project
+                                        var project = projectList.firstWhere(
+                                          (project) =>
+                                              project.id ==
+                                              dataList[index].projectId,
+                                        );
+                                        String projectName = project != null
+                                            ? project.name
+                                            : 'Unknown Project';
+
+                                        //For attribute
+                                        var attribute =
+                                            attributesList.firstWhere(
+                                          (attribute) =>
+                                              attribute.id ==
+                                              dataList[index].attrId,
+                                        );
+                                        String attributeName = attribute != null
+                                            ? attribute.name
+                                            : 'Unknown attribute';
+
+                                        //For Tasks
+
+                                        //For attribute
+                                        var allTasks = allTaskList.firstWhere(
+                                          (task) =>
+                                              task.id == dataList[index].taskId,
+                                        );
+                                        String taskName = allTasks != null
+                                            ? allTasks.task
+                                            : 'Unknown attribute';
+
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            // Get.to(Dialog_log_timesheet_screen(
+                                            //   projectName: projectName,
+                                            //   taskName: taskName,
+                                            //   attrName: attributeName,
+                                            //   projectId: snapshot.data[index].projectId,
+                                            //   taskId: snapshot.data[index].taskId,
+                                            //   attrId: snapshot.data[index].taskId,
+                                            // ));
+
+                                            //
+
+                                            Get.to(
+                                              Get.defaultDialog(
+                                                barrierDismissible: false,
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 195, 215, 196),
+                                                title: 'Logged Timesheet',
+                                                content:
+                                                    Dialog_log_timesheet_screen(
+                                                  projectName: projectName,
+                                                  taskName: taskName,
+                                                  attrName: attributeName,
+                                                  projectId: dataList[index]
+                                                      .projectId!
+                                                      .toInt(),
+                                                  taskId: dataList[index]
+                                                      .taskId!
+                                                      .toInt(),
+                                                  attrId: dataList[index]
+                                                      .taskId!
+                                                      .toInt(),
+                                                  description: dataList[index]
+                                                      .description
+                                                      .toString(),
+                                                  mon: dataList[index]
+                                                      .taskDetails!['']!,
+                                                  tue: dataList[index]
+                                                      .taskDetails!['']!,
+                                                  wed: dataList[index]
+                                                      .taskDetails!['']!,
+                                                  thu: dataList[index]
+                                                      .taskDetails!['']!,
+                                                  fri: dataList[index]
+                                                      .taskDetails!['']!,
+                                                  sat: dataList[index]
+                                                      .taskDetails!['']!,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: TimesheetLogCard(
+                                            ht: 110,
+                                            wd: 400,
+                                            duration: 400,
+                                            Project: projectName,
+                                            Task: taskName,
+                                            Attribute: attributeName,
+                                          ),
+                                        );
+                                      },
+                                    );
                                   }
                                 }),
                               )
@@ -325,36 +536,111 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                                         //   height: 200,
                                         //   width: 130,
                                         // ),
-                                        Text('No records found')
+                                        Text(
+                                          '             No records found\nPick date above to view Timesheet',
+                                        )
                                       ],
                                     ));
                                   } else {
                                     return ListView.builder(
-                                        itemCount: dataList!.length,
-                                        itemBuilder: (context, index) {
-                                          return GestureDetector(
-                                            onTap: () async {},
-                                            child: HRTasksCard(
-                                              ht: 120,
-                                              wd: 400,
-                                              duration: 400,
-                                              // id: dataList![index].id.toString(),
-                                              task: dataList![index]
-                                                  .task
-                                                  .toString(),
-                                              createdAt: dataList![index]
-                                                  .createdAt
-                                                  .toString()
-                                                  .split("T")[0],
-                                              description: dataList![index]
-                                                  .description
-                                                  .toString(),
-                                              remark: dataList![index]
-                                                  .remark
-                                                  .toString(),
-                                            ),
-                                          );
-                                        });
+                                      itemCount: dataList!.length,
+                                      itemBuilder: (context, index) {
+                                        //For Project
+                                        var project = projectList.firstWhere(
+                                          (project) =>
+                                              project.id ==
+                                              dataList[index].projectId,
+                                        );
+                                        String projectName = project != null
+                                            ? project.name
+                                            : 'Unknown Project';
+
+                                        //For attribute
+                                        var attribute =
+                                            attributesList.firstWhere(
+                                          (attribute) =>
+                                              attribute.id ==
+                                              dataList[index].attrId,
+                                        );
+                                        String attributeName = attribute != null
+                                            ? attribute.name
+                                            : 'Unknown attribute';
+
+                                        //For Tasks
+
+                                        //For attribute
+                                        var allTasks = allTaskList.firstWhere(
+                                          (task) =>
+                                              task.id == dataList[index].taskId,
+                                        );
+                                        String taskName = allTasks != null
+                                            ? allTasks.task
+                                            : 'Unknown attribute';
+
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            // Get.to(Dialog_log_timesheet_screen(
+                                            //   projectName: projectName,
+                                            //   taskName: taskName,
+                                            //   attrName: attributeName,
+                                            //   projectId: snapshot.data[index].projectId,
+                                            //   taskId: snapshot.data[index].taskId,
+                                            //   attrId: snapshot.data[index].taskId,
+                                            // ));
+
+                                            //
+
+                                            Get.to(
+                                              Get.defaultDialog(
+                                                barrierDismissible: false,
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 195, 215, 196),
+                                                title: 'Logged Timesheet',
+                                                content:
+                                                    Dialog_log_timesheet_screen(
+                                                  projectName: projectName,
+                                                  taskName: taskName,
+                                                  attrName: attributeName,
+                                                  projectId: dataList[index]
+                                                      .projectId!
+                                                      .toInt(),
+                                                  taskId: dataList[index]
+                                                      .taskId!
+                                                      .toInt(),
+                                                  attrId: dataList[index]
+                                                      .taskId!
+                                                      .toInt(),
+                                                  description: dataList[index]
+                                                      .description
+                                                      .toString(),
+                                                  mon: dataList[index]
+                                                      .taskDetails!['']!,
+                                                  tue: dataList[index]
+                                                      .taskDetails!['']!,
+                                                  wed: dataList[index]
+                                                      .taskDetails!['']!,
+                                                  thu: dataList[index]
+                                                      .taskDetails!['']!,
+                                                  fri: dataList[index]
+                                                      .taskDetails!['']!,
+                                                  sat: dataList[index]
+                                                      .taskDetails!['']!,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: TimesheetLogCard(
+                                            ht: 110,
+                                            wd: 400,
+                                            duration: 400,
+                                            Project: projectName,
+                                            Task: taskName,
+                                            Attribute: attributeName,
+                                          ),
+                                        );
+                                      },
+                                    );
                                   }
                                 }),
                               )
@@ -410,16 +696,28 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
         return DateFormat('yyyy-MM-dd').format(date);
       }).toList();
 
-      // Navigate to the next screen, passing the picked date and the next 5 dates
-      Get.to(CreateTimesheetScreen(
-        title: 'Logged Timesheet',
-        date1: formattedDate,
-        date2: formattedNextDates[1],
-        date3: formattedNextDates[2],
-        date4: formattedNextDates[3],
-        date5: formattedNextDates[4],
-        date6: formattedNextDates[5],
-      ));
+      //Assign populated dates to the variables
+      if (pick == true) {
+        date1 = formattedDate;
+        date2 = formattedNextDates[1];
+        date3 = formattedNextDates[2];
+        date4 = formattedNextDates[3];
+        date5 = formattedNextDates[4];
+        date6 = formattedNextDates[5];
+        setState(() {});
+        initState();
+      } else {
+        // Navigate to the next screen, passing the picked date and the next 5 dates
+        Get.to(CreateTimesheetScreen(
+          title: 'Logged Timesheet',
+          date1: formattedDate,
+          date2: formattedNextDates[1],
+          date3: formattedNextDates[2],
+          date4: formattedNextDates[3],
+          date5: formattedNextDates[4],
+          date6: formattedNextDates[5],
+        ));
+      }
     }
   }
 

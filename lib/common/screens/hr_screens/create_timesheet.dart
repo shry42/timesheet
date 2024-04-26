@@ -325,7 +325,7 @@ class _CreateTimesheetScreenState extends State<CreateTimesheetScreen> {
                                   projectId:
                                       AllLogDataList[index].projectId!.toInt(),
                                   taskId: AllLogDataList[index].taskId!.toInt(),
-                                  attrId: AllLogDataList[index].taskId!.toInt(),
+                                  attrId: AllLogDataList[index].attrId!.toInt(),
                                   description: AllLogDataList[index]
                                       .description
                                       .toString(),
@@ -341,8 +341,20 @@ class _CreateTimesheetScreenState extends State<CreateTimesheetScreen> {
                                       .taskDetails![widget.date5]!,
                                   sat: AllLogDataList[index]
                                       .taskDetails![widget.date6]!,
-                                  updateNewEntry: (newEntry) =>
-                                      updateNewEntry(index, newEntry),
+                                  date1: widget.date1,
+                                  date2: widget.date2,
+                                  date3: widget.date3,
+                                  date4: widget.date4,
+                                  date5: widget.date5,
+                                  date6: widget.date6,
+                                  logId: AllLogDataList[index].logId,
+                                  departmentId:
+                                      AllLogDataList[index].departmentId,
+                                  updateNewEntry: (newEntry) {
+                                    setState(() {
+                                      AllLogDataList[index] = newEntry;
+                                    });
+                                  },
                                 ),
                               );
 

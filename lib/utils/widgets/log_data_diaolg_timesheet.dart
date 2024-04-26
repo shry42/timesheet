@@ -21,6 +21,14 @@ class Dialog_log_timesheet_screen extends StatefulWidget {
     // required this.index,
     // required this.entry,
     required this.updateNewEntry,
+    this.date1,
+    this.date2,
+    this.date3,
+    this.date4,
+    this.date5,
+    this.date6,
+    this.departmentId,
+    this.logId,
   });
 
   final String projectName;
@@ -40,6 +48,14 @@ class Dialog_log_timesheet_screen extends StatefulWidget {
   final int attrId;
   // final int index;
   // final TimesheetEntry entry;
+  final String? date1;
+  final String? date2;
+  final String? date3;
+  final String? date4;
+  final String? date5;
+  final String? date6;
+  final int? departmentId;
+  final int? logId;
 
   final Function(TimesheetEntry) updateNewEntry;
 
@@ -64,8 +80,6 @@ class _Dialog_log_timesheet_screenState
   TextEditingController thuCont = TextEditingController();
   TextEditingController friCont = TextEditingController();
   TextEditingController satCont = TextEditingController();
-
-  int? departmentId;
 
   void updateTimesheetEntry() {
     final monHours = int.tryParse(monCont.text) ?? 0;
@@ -100,22 +114,22 @@ class _Dialog_log_timesheet_screenState
       projectId: widget.projectId!,
       taskId: widget.taskId!,
       attrId: widget.attrId!,
-      departmentId: departmentId,
+      departmentId: widget.departmentId,
       description: decriptionCont.text,
+      logId: widget.logId,
       taskDetails: {
-        widget.mon: monHours.toString(),
-        widget.tue: tueHours.toString(),
-        widget.wed: wedHours.toString(),
-        widget.thu: thuHours.toString(),
-        widget.fri: friHours.toString(),
-        widget.sat: satHours.toString(),
+        widget.date1.toString(): monHours.toString(),
+        widget.date2.toString(): tueHours.toString(),
+        widget.date3.toString(): wedHours.toString(),
+        widget.date4.toString(): thuHours.toString(),
+        widget.date5.toString(): friHours.toString(),
+        widget.date6.toString(): satHours.toString(),
       },
     );
 
     // Call the updateNewEntry function passed in from the CreateTimesheetScreen widget
     // with a single argument that contains both the index and the new TimesheetEntry object
-    // widget
-    //     .updateNewEntry(TimesheetEntry( index, newEntry));
+    widget.updateNewEntry(newEntry);
 
     // Navigateback to the parent screen
     Navigator.pop(context);
@@ -448,6 +462,11 @@ class _Dialog_log_timesheet_screenState
                   maxLines: 200,
                 ),
               ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: updateTimesheetEntry,
+              child: const Text('Save'),
             ),
           ]),
         ),

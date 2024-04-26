@@ -177,6 +177,7 @@ class _HRUserAssignAddProjectListState
                             widget.departmentId,
                           );
                           setState(() {});
+                          _selectedUserIds.clear();
                           // }
                         },
                         child: const Row(

@@ -477,7 +477,7 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                                             }
                                           },
                                           child: HRUsersCard(
-                                            ht: height,
+                                            ht: 210,
                                             wd: width,
                                             duration: 200,
                                             name:
@@ -490,6 +490,8 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                                                 dataList![index].isManager == 0
                                                     ? 'no'
                                                     : 'yes',
+                                            rejectReason:
+                                                dataList![index].rejectReason,
                                           ),
                                         );
                                       });

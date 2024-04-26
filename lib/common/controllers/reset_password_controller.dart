@@ -13,7 +13,7 @@ class PasswordResetcontroller extends GetxController {
 
   Future<void> changePassword() async {
     http.Response response = await http.put(
-      Uri.parse('${ApiService.baseUrl}/api/auth/resetPassword'),
+      Uri.parse('${ApiService.baseUrl}/api/auth/updatePassword'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${AppController.accessToken}',

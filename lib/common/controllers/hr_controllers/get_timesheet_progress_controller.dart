@@ -56,12 +56,13 @@ class GetTimesheetStatusController extends GetxController {
           inProcessTaskList.add(entry.taskDetails);
         }
         inProcessDataList = inProcessTimesheetArray;
+      } else {
+        inProcessDataList = [];
       }
 
       //
       if (dataRejected.isNotEmpty) {
-        rejectedTimesheet =
-            dataRejected.map((e) => RejectedTimesheet.fromJson(e)).toList();
+        rejectedTimesheet = [RejectedTimesheet.fromJson(dataRejected[0])];
         List<dynamic> rejectedTimesheetArray = rejectedTimesheet
             .map((rejected) => rejected.timesheetArray)
             .expand((array) => array)
@@ -71,6 +72,8 @@ class GetTimesheetStatusController extends GetxController {
           rejectedTaskList.add(entry.taskDetails);
         }
         rejectedDataList = rejectedTimesheetArray;
+      } else {
+        rejectedDataList = [];
       }
 
       //
@@ -86,10 +89,15 @@ class GetTimesheetStatusController extends GetxController {
           approvedTaskList.add(entry.taskDetails);
         }
         approvedDataList = approvedTimesheetArray;
+      } else {
+        approvedDataList = [];
       }
-
       // return inProcessTimesheetArray;
+      return inProcessDataList;
+    } else {
+      rejectedDataList = [];
+      approvedDataList = [];
+      return inProcessDataList = [];
     }
-    return inProcessDataList;
   }
 }

@@ -17,11 +17,13 @@ class VerifyTaskScreen extends StatefulWidget {
     required this.description,
     required this.taskId,
     required this.createdAt,
+    this.selectedTaskIds,
   }) : super(key: key);
 
   final String title, taskName, description, createdAt;
   final String? remark;
   final int taskId;
+  final List? selectedTaskIds;
 
   @override
   State<VerifyTaskScreen> createState() => _VerifyTaskScreenState();
@@ -105,11 +107,11 @@ class _VerifyTaskScreenState extends State<VerifyTaskScreen> {
                     ),
                     child: ElevatedButton(
                       onPressed: () async {
-                        await VerifyTaskController()
-                            .verifyTask(widget.taskId!.toInt(), '1', '');
+                        await VerifyTaskController().verifyTask(
+                            widget.selectedTaskIds as List, '1', '');
                         if (AppController.message != null) {
                           Get.defaultDialog(
-                            title: "Success!",
+                            // title: "Success!",
                             middleText: "${AppController.message}",
                             textConfirm: "OK",
                             confirmTextColor: Colors.white,
@@ -157,7 +159,8 @@ class _VerifyTaskScreenState extends State<VerifyTaskScreen> {
                               const Color.fromARGB(255, 195, 215, 196),
                           title: 'Add Remark',
                           content: DialogBoxVerfiyRemarkTask(
-                              taskId: widget.taskId, verify: '2'),
+                              taskId: widget.selectedTaskIds as List,
+                              verify: '2'),
                         ));
 
                         // await VerifyProjectController()

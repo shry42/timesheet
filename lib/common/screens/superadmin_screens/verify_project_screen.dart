@@ -6,6 +6,7 @@ import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/controllers/superadmin_controllers/verify_project_controller.dart';
 import 'package:timesheet/utils/widgets/hr_cards/hr_projects_card.dart';
+import 'package:timesheet/utils/widgets/reject_verify_project_diaolog.dart';
 
 class VerifyProjectScreen extends StatefulWidget {
   VerifyProjectScreen({
@@ -112,7 +113,7 @@ class _VerifyProjectScreenState extends State<VerifyProjectScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         await VerifyProjectController()
-                            .verifyProject(widget.projectId!.toInt(), '1');
+                            .verifyProject(widget.projectId!.toInt(), '1', '');
                         if (AppController.message != null) {
                           Get.defaultDialog(
                             title: "Success!",
@@ -158,8 +159,18 @@ class _VerifyProjectScreenState extends State<VerifyProjectScreen> {
                     ),
                     child: ElevatedButton(
                       onPressed: () async {
-                        await VerifyProjectController()
-                            .verifyProject(widget.projectId!.toInt(), '2');
+                        await Get.to(Get.defaultDialog(
+                          backgroundColor:
+                              const Color.fromARGB(255, 195, 215, 196),
+                          title: 'Add Remark',
+                          content: DialogBoxVerfiyProjectReason(
+                            verify: '2',
+                            projectId: widget.projectId,
+                          ),
+                        ));
+
+                        // await VerifyProjectController()
+                        //     .verifyProject(widget.projectId!.toInt(), '1');
                         if (AppController.message != null) {
                           Get.defaultDialog(
                             title: "Success!",
@@ -169,11 +180,12 @@ class _VerifyProjectScreenState extends State<VerifyProjectScreen> {
                             onConfirm: () async {
                               AppController.setmessage(null);
                               Get.offAll(const BottomNavHR(
-                                initialIndex: 1,
+                                initialIndex: 3,
                               ));
                             },
                           );
                           return;
+                          // toast(AppController.message);
                         }
                       },
                       child: const Row(

@@ -8,7 +8,7 @@ class HRTasksCard extends StatelessWidget {
     this.duration,
     required this.description,
     required this.createdAt,
-    required this.remark,
+    this.remark,
     // required this.id,
     required this.task,
   }) : super(key: key);
@@ -20,7 +20,7 @@ class HRTasksCard extends StatelessWidget {
   final String task;
   final String createdAt;
   final String description;
-  final String remark;
+  final String? remark;
 
   @override
   Widget build(BuildContext context) {
@@ -119,23 +119,24 @@ class HRTasksCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'Remark :  $remark',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (remark != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Remark :  $remark',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
                 const SizedBox(height: 10),
               ]),
               //

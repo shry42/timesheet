@@ -86,7 +86,8 @@ class _DepartmentsHRScreenState extends State<DepartmentsHRScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const Spacer(),
+
+                const SizedBox(width: 10),
                 Shimmer(
                   duration: const Duration(seconds: 2),
                   interval: const Duration(milliseconds: 20),
@@ -122,7 +123,9 @@ class _DepartmentsHRScreenState extends State<DepartmentsHRScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                if (AppController.role == 'hrManager')
+                // if (AppController.role == 'hrManager' ||
+                //     AppController.isManager == 1)
+                if (AppController.role != 'superAdmin')
                   Shimmer(
                     duration: const Duration(seconds: 2),
                     // This is NOT the default value. Default value: Duration(seconds: 0)
@@ -486,7 +489,7 @@ class _DepartmentsHRScreenState extends State<DepartmentsHRScreen> {
                                             } else if (AppController.role ==
                                                 'superAdmin') {
                                               Get.to(VerifyDepartmentScreen(
-                                                  title: 'VerifyDepartment',
+                                                  title: 'Verify Department',
                                                   deptName: deptName,
                                                   deptId: deptId,
                                                   createdAt: createdAt));

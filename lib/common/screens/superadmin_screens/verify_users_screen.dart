@@ -6,6 +6,7 @@ import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/controllers/superadmin_controllers/verify_users_controller.dart';
 import 'package:timesheet/utils/widgets/hr_cards/hr_users_card.dart';
+import 'package:timesheet/utils/widgets/reject_verify_user_dialog.dart';
 
 class VerifyUsersScreen extends StatefulWidget {
   VerifyUsersScreen({
@@ -79,7 +80,7 @@ class _VerifyUsersScreenState extends State<VerifyUsersScreen> {
             ht: 150,
             wd: 400,
             duration: 100,
-            name: widget.firstName + widget.lastName,
+            name: '${widget.firstName} ${widget.lastName}',
             email: widget.email,
             mobile: widget.mobileNo,
             reportingManager: widget.reportingManager,
@@ -107,7 +108,7 @@ class _VerifyUsersScreenState extends State<VerifyUsersScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         await VerifyUsersController()
-                            .verifyUser(widget.userId!.toInt(), '1');
+                            .verifyUser(widget.userId!.toInt(), '1', '');
                         if (AppController.message != null) {
                           Get.defaultDialog(
                             title: "Success!",
@@ -153,8 +154,18 @@ class _VerifyUsersScreenState extends State<VerifyUsersScreen> {
                     ),
                     child: ElevatedButton(
                       onPressed: () async {
-                        await VerifyUsersController()
-                            .verifyUser(widget.userId!.toInt(), '2');
+                        await Get.to(Get.defaultDialog(
+                          backgroundColor:
+                              const Color.fromARGB(255, 195, 215, 196),
+                          title: 'Add Remark',
+                          content: DialogBoxVerfiyUser(
+                            verify: '2',
+                            userId: widget.userId!.toInt(),
+                          ),
+                        ));
+
+                        // await VerifyProjectController()
+                        //     .verifyProject(widget.projectId!.toInt(), '1');
                         if (AppController.message != null) {
                           Get.defaultDialog(
                             title: "Success!",
@@ -164,11 +175,12 @@ class _VerifyUsersScreenState extends State<VerifyUsersScreen> {
                             onConfirm: () async {
                               AppController.setmessage(null);
                               Get.offAll(const BottomNavHR(
-                                initialIndex: 0,
+                                initialIndex: 3,
                               ));
                             },
                           );
                           return;
+                          // toast(AppController.message);
                         }
                       },
                       child: const Row(

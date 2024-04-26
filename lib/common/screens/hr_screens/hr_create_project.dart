@@ -21,6 +21,8 @@ class _HRCreateProjectState extends State<HRCreateProject> {
   final TextEditingController name = TextEditingController();
   final TextEditingController description = TextEditingController();
   final TextEditingController code = TextEditingController();
+  final TextEditingController startDateController = TextEditingController();
+  final TextEditingController endDateController = TextEditingController();
   //  TextEditingController selectedStartDate = TextEditingController();
   //  TextEditingController selectedEndDate = TextEditingController();
   // final TextEditingController departmentId = TextEditingController();
@@ -179,6 +181,7 @@ class _HRCreateProjectState extends State<HRCreateProject> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
               child: TextFormField(
+                controller: startDateController,
                 decoration: InputDecoration(
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
@@ -187,10 +190,6 @@ class _HRCreateProjectState extends State<HRCreateProject> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                // initialValue: "select date",
-                // // _date.toLocal().toString().split(' ')[0],
-                initialValue:
-                    cpc.selectedStartDate.value.split(' ')[0] ?? 'select date',
                 readOnly: true,
                 onTap: () async {
                   DateTime? pickedDate = await showDatePicker(
@@ -203,12 +202,13 @@ class _HRCreateProjectState extends State<HRCreateProject> {
                   if (pickedDate != null && pickedDate != _date) {
                     setState(() {
                       _date = pickedDate;
-                      cpc.selectedStartDate.value = pickedDate.toString();
+                      startDateController.text =
+                          pickedDate.toString().split(' ')[0];
                     });
                   }
                 },
                 validator: (value) {
-                  if (value == null) {
+                  if (value == null || value.isEmpty) {
                     return 'Please select startDate';
                   }
                   return null;
@@ -219,6 +219,7 @@ class _HRCreateProjectState extends State<HRCreateProject> {
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
               child: TextFormField(
+                controller: endDateController,
                 decoration: InputDecoration(
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
@@ -227,10 +228,6 @@ class _HRCreateProjectState extends State<HRCreateProject> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                // initialValue: "select date",
-                // // _date.toLocal().toString().split(' ')[0],
-                initialValue:
-                    cpc.selectedEndDate.value.split(' ')[0] ?? 'select date',
                 readOnly: true,
                 onTap: () async {
                   DateTime? pickedDate = await showDatePicker(
@@ -243,12 +240,13 @@ class _HRCreateProjectState extends State<HRCreateProject> {
                   if (pickedDate != null && pickedDate != _date) {
                     setState(() {
                       _date = pickedDate;
-                      cpc.selectedEndDate.value = pickedDate.toString();
+                      endDateController.text =
+                          pickedDate.toString().split(' ')[0];
                     });
                   }
                 },
                 validator: (value) {
-                  if (value == null) {
+                  if (value == null || value.isEmpty) {
                     return 'Please select endDate';
                   }
                   return null;
@@ -306,8 +304,10 @@ class _HRCreateProjectState extends State<HRCreateProject> {
                         name.text,
                         description.text,
                         code.text,
-                        cpc.selectedStartDate.value,
-                        cpc.selectedEndDate.value,
+                        // cpc.selectedStartDate.value,
+                        // cpc.selectedEndDate.value,
+                        startDateController.text,
+                        endDateController.text,
                         departmentId as int);
                     // }
                   },

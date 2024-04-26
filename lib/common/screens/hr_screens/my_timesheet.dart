@@ -7,12 +7,13 @@ import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/get_all_projects_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_timesheet_progress_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_attributes_controller.dart';
-import 'package:timesheet/common/controllers/hr_controllers/hr_my_projects_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_tasks_controller.dart';
 import 'package:timesheet/common/screens/hr_screens/create_timesheet.dart';
-import 'package:timesheet/utils/widgets/log_data_diaolg_timesheet.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_myteam.dart';
+import 'package:timesheet/common/screens/hr_screens/hr_profile_settings.dart';
 import 'package:timesheet/utils/widgets/submitted_timesheet_dialog.dart';
 import 'package:timesheet/utils/widgets/timesheet_log_cards.dart';
 
@@ -27,7 +28,8 @@ class MyTimesheetScreen extends StatefulWidget {
 final GetTimesheetStatusController gtsc = GetTimesheetStatusController();
 
 class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
-  HRMyProjectsController mpc = HRMyProjectsController();
+  // HRMyProjectsController mpc = HRMyProjectsController();// disabling for now , beacuse some projects may be deleted and it will return null
+  final AllProjectsController apc = AllProjectsController();
   final HRAttributesController ac = HRAttributesController();
   final HRTasksController allTasksCont = HRTasksController();
 
@@ -37,7 +39,7 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
   List<dynamic> allTaskList = [];
   bool pick = false;
 
-  String? date1;
+  String? date1 = 'Pick Date';
   String? date2;
   String? date3;
   String? date4;
@@ -45,7 +47,8 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
   String? date6;
 
   getData() async {
-    projectList = await mpc.myProjects();
+    // projectList = await mpc.myProjects();
+    projectList = await apc.allProjects();
   }
 
   getAllAttributes() async {
@@ -57,12 +60,7 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
     setState(() {});
   }
 
-  @override
-  void initState() {
-    getData();
-    getAllAttributes();
-    getAllTasks();
-    //
+  firstLoadData() {
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       await gtsc.getTimesheetStatusData(date1.toString()).then((value) {
         setState(() {
@@ -71,6 +69,23 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
         });
       });
     });
+  }
+
+  @override
+  void initState() {
+    getData();
+    getAllAttributes();
+    getAllTasks();
+    firstLoadData();
+    //
+    // WidgetsBinding.instance?.addPostFrameCallback((_) async {
+    //   await gtsc.getTimesheetStatusData(date1.toString()).then((value) {
+    //     setState(() {
+    //       dataList = value;
+    //       mainDataList = value;
+    //     });
+    //   });
+    // });
     pick = false;
     super.initState();
   }
@@ -86,7 +101,7 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 213, 231, 214),
         body: Column(children: [
-          const SizedBox(height: 40),
+          const SizedBox(height: 18),
           GlassContainer(
             height: 50,
             width: double.infinity,
@@ -119,7 +134,47 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                     ),
                   ),
                   const Spacer(),
-                  if (AppController.role == 'hrManager')
+
+                  Shimmer(
+                    duration: const Duration(seconds: 2),
+                    interval: const Duration(milliseconds: 20),
+                    color: Colors.white,
+                    colorOpacity: 1,
+                    enabled: true,
+                    direction: const ShimmerDirection.fromLTRB(),
+                    child: GestureDetector(
+                      onTap: () {
+                        pick = true;
+                        _selectDate(context, selectedDate ?? DateTime.now());
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 65,
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(6)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                '$date1',
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  //
+                  if (AppController.role == 'hrManager' ||
+                      AppController.role == 'superAdmin' ||
+                      AppController.isManager == 1)
                     Shimmer(
                       duration: const Duration(seconds: 2),
                       interval: const Duration(milliseconds: 20),
@@ -129,12 +184,12 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                       direction: const ShimmerDirection.fromLTRB(),
                       child: GestureDetector(
                         onTap: () {
-                          pick = true;
-                          _selectDate(context, selectedDate ?? DateTime.now());
+                          Get.to(const MyTeamScreen(
+                              title: 'Verify Team\'s Timesheet'));
                         },
                         child: Container(
                           height: 30,
-                          width: 70,
+                          width: 45,
                           decoration: BoxDecoration(
                               border: Border.all(),
                               color: Colors.white70,
@@ -145,7 +200,7 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                             children: [
                               Center(
                                 child: Text(
-                                  'Pick Date',
+                                  'Verify',
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 12),
                                 ),
@@ -156,47 +211,59 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                       ),
                     ),
                   const SizedBox(width: 10),
-                  if (AppController.role == 'hrManager')
-                    Shimmer(
-                      duration: const Duration(seconds: 2),
-                      interval: const Duration(milliseconds: 20),
-                      color: Colors.white,
-                      colorOpacity: 1,
-                      enabled: true,
-                      direction: const ShimmerDirection.fromLTRB(),
-                      child: GestureDetector(
+                  //
+                  // if (AppController.role == 'hrManager')
+                  Shimmer(
+                    duration: const Duration(seconds: 2),
+                    interval: const Duration(milliseconds: 20),
+                    color: Colors.white,
+                    colorOpacity: 1,
+                    enabled: true,
+                    direction: const ShimmerDirection.fromLTRB(),
+                    child: GestureDetector(
+                      onTap: () {
+                        _selectDate(context, selectedDate ?? DateTime.now());
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 50,
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(6)),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                'Fill',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  if (AppController.role == 'user')
+                    GestureDetector(
                         onTap: () {
-                          _selectDate(context, selectedDate ?? DateTime.now());
+                          Get.to(
+                            const HRSettingsScreen(title: 'Profile'),
+                          );
                         },
-                        child: Container(
-                          height: 30,
-                          width: 100,
-                          decoration: BoxDecoration(
-                              border: Border.all(),
-                              color: Colors.white70,
-                              borderRadius: BorderRadius.circular(6)),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Center(
-                                child: Text(
-                                  'Create Timesheet',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 12),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  const SizedBox(width: 10),
+                        child: const CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Color.fromARGB(255, 120, 218, 130),
+                            child: Icon(Icons.person))),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 10),
+
           //
           Expanded(
             child: DefaultTabController(
@@ -447,26 +514,15 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
 
                                         return GestureDetector(
                                           onTap: () async {
-                                            // Get.to(Dialog_log_timesheet_screen(
-                                            //   projectName: projectName,
-                                            //   taskName: taskName,
-                                            //   attrName: attributeName,
-                                            //   projectId: snapshot.data[index].projectId,
-                                            //   taskId: snapshot.data[index].taskId,
-                                            //   attrId: snapshot.data[index].taskId,
-                                            // ));
-
-                                            //
-
                                             Get.to(
                                               Get.defaultDialog(
                                                 barrierDismissible: false,
                                                 backgroundColor:
                                                     const Color.fromARGB(
                                                         255, 195, 215, 196),
-                                                title: 'Logged Timesheet',
+                                                title: 'Submitted Timesheet',
                                                 content:
-                                                    Dialog_log_timesheet_screen(
+                                                    SubmittedTimesheetDialogScreen(
                                                   projectName: projectName,
                                                   taskName: taskName,
                                                   attrName: attributeName,
@@ -483,17 +539,17 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                                                       .description
                                                       .toString(),
                                                   mon: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date1]!,
                                                   tue: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date2]!,
                                                   wed: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date3]!,
                                                   thu: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date4]!,
                                                   fri: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date5]!,
                                                   sat: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date6]!,
                                                 ),
                                               ),
                                             );
@@ -579,26 +635,15 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
 
                                         return GestureDetector(
                                           onTap: () async {
-                                            // Get.to(Dialog_log_timesheet_screen(
-                                            //   projectName: projectName,
-                                            //   taskName: taskName,
-                                            //   attrName: attributeName,
-                                            //   projectId: snapshot.data[index].projectId,
-                                            //   taskId: snapshot.data[index].taskId,
-                                            //   attrId: snapshot.data[index].taskId,
-                                            // ));
-
-                                            //
-
                                             Get.to(
                                               Get.defaultDialog(
                                                 barrierDismissible: false,
                                                 backgroundColor:
                                                     const Color.fromARGB(
                                                         255, 195, 215, 196),
-                                                title: 'Logged Timesheet',
+                                                title: 'Submitted Timesheet',
                                                 content:
-                                                    Dialog_log_timesheet_screen(
+                                                    SubmittedTimesheetDialogScreen(
                                                   projectName: projectName,
                                                   taskName: taskName,
                                                   attrName: attributeName,
@@ -615,17 +660,17 @@ class _MyTimesheetScreenState extends State<MyTimesheetScreen> {
                                                       .description
                                                       .toString(),
                                                   mon: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date1]!,
                                                   tue: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date2]!,
                                                   wed: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date3]!,
                                                   thu: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date4]!,
                                                   fri: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date5]!,
                                                   sat: dataList[index]
-                                                      .taskDetails!['']!,
+                                                      .taskDetails![date6]!,
                                                 ),
                                               ),
                                             );

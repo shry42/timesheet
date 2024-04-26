@@ -2,6 +2,7 @@ import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_all_projects_controller.dart';
@@ -107,7 +108,9 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                   ),
                 ),
                 const Spacer(),
-                if (AppController.role == 'hrManager')
+                // if (AppController.role == 'hrManager' ||
+                //     AppController.isManager == 1)
+                if (AppController.role != 'superAdmin')
                   Shimmer(
                     duration: const Duration(seconds: 2),
                     interval: const Duration(milliseconds: 20),
@@ -145,8 +148,10 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                     ),
                   ),
 
-                SizedBox(height: 10),
-                if (AppController.role == 'hrManager')
+                SizedBox(width: 10),
+                // if (AppController.role == 'hrManager' ||
+                //     AppController.isManager == 1)
+                if (AppController.role != 'superAdmin')
                   Shimmer(
                     duration: const Duration(seconds: 2),
                     interval: const Duration(milliseconds: 20),
@@ -183,8 +188,10 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                       ),
                     ),
                   ),
-                SizedBox(height: 10),
-                if (AppController.role == 'hrManager')
+                const SizedBox(width: 10),
+                // if (AppController.role == 'hrManager' ||
+                //     AppController.isManager == 1)
+                if (AppController.role != 'superAdmin')
                   Shimmer(
                     duration: const Duration(seconds: 2),
                     interval: const Duration(milliseconds: 20),
@@ -198,7 +205,7 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                       },
                       child: Container(
                         height: 30,
-                        width: 65,
+                        width: 70,
                         decoration: BoxDecoration(
                             border: Border.all(),
                             color: Colors.white70,
@@ -363,6 +370,7 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                       //   height: 210,
                                       //   width: 130,
                                       // ),
+                                      SizedBox(height: 60),
                                       Text('No records found'),
                                     ],
                                   ));
@@ -388,7 +396,8 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                             // myTeamCont.departmentId.value =
                                             //     dataList![index].departmentId;
                                             if (AppController.role ==
-                                                'hrManager') {
+                                                    'hrManager' ||
+                                                AppController.isManager == 1) {
                                               Get.to(HRUpdateProject(
                                                 title: 'Update Project',
                                                 name: name,
@@ -421,13 +430,12 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                             endDate: dataList![index]
                                                 .endDate
                                                 .toString(),
-                                            createdAt: dataList![index]
-                                                .createdAt
-                                                .toString()
-                                                .split("T")[0],
-                                            remark: dataList![index]
-                                                .remark
-                                                .toString(),
+                                            createdAt: DateFormat('yyyy-MM-dd')
+                                                .format(
+                                                    dataList![index].createdAt),
+                                            // remark: dataList![index]
+                                            //     .remark
+                                            //     .toString(),
                                           ),
                                         );
                                       });
@@ -511,13 +519,12 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                             endDate: dataList![index]
                                                 .endDate
                                                 .toString(),
-                                            createdAt: dataList![index]
-                                                .createdAt
-                                                .toString()
-                                                .split("T")[0],
-                                            remark: dataList![index]
-                                                .remark
-                                                .toString(),
+                                            createdAt: DateFormat('yyyy-MM-dd')
+                                                .format(
+                                                    dataList![index].createdAt),
+                                            // remark: dataList![index]
+                                            //     .remark
+                                            //     .toString(),
                                           ),
                                         );
                                       });
@@ -601,10 +608,9 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                             endDate: dataList![index]
                                                 .endDate
                                                 .toString(),
-                                            createdAt: dataList![index]
-                                                .createdAt
-                                                .toString()
-                                                .split("T")[0],
+                                            createdAt: DateFormat('yyyy-MM-dd')
+                                                .format(
+                                                    dataList![index].createdAt),
                                             remark: dataList![index]
                                                 .remark
                                                 .toString(),
@@ -715,13 +721,12 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                             endDate: dataList![index]
                                                 .endDate
                                                 .toString(),
-                                            createdAt: dataList![index]
-                                                .createdAt
-                                                .toString()
-                                                .split("T")[0],
-                                            remark: dataList![index]
-                                                .remark
-                                                .toString(),
+                                            createdAt: DateFormat('yyyy-MM-dd')
+                                                .format(
+                                                    dataList![index].createdAt),
+                                            // remark: dataList![index]
+                                            //     .remark
+                                            //     .toString(),
                                           ),
                                         );
                                       });

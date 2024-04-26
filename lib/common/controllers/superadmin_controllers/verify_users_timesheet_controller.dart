@@ -4,26 +4,28 @@ import 'package:http/http.dart' as http;
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/services/api_service.dart';
 
-class VerifyTaskController extends GetxController {
+class VerifyUsersTimesheetController extends GetxController {
   // RxString remark = ''.obs;
 
-  Future verifyTask(
-    List taskId,
-    String verify,
-    String remark,
+  Future verifyTimesheet(
+    int userId,
+    String status,
+    String date,
+    String reason,
   ) async {
 //
     Map<String, dynamic> requestBody = {
-      "taskId": taskId,
-      "verify": verify,
+      "status": status,
+      "date": date,
+      "userId": userId
     };
 
-    if (remark != null && remark.isNotEmpty) {
-      requestBody["remark"] = remark;
+    if (reason != null && reason.isNotEmpty) {
+      requestBody["reason"] = reason;
     }
 //
     http.Response response = await http.put(
-      Uri.parse('${ApiService.baseUrl}/api/task/verifyTask'),
+      Uri.parse('${ApiService.baseUrl}/api/timesheet/updateStatus'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${AppController.accessToken}',
@@ -34,6 +36,7 @@ class VerifyTaskController extends GetxController {
       Map<String, dynamic> result = jsonDecode(response.body);
       String message = result['message'];
       AppController.setmessage(message);
+      Get.back();
     }
 
     if (response.statusCode == 200) {
@@ -41,6 +44,7 @@ class VerifyTaskController extends GetxController {
       // AppController.setmessage(null);
       String message = result['message'];
       AppController.setmessage(message);
+      Get.back();
     }
   }
 }

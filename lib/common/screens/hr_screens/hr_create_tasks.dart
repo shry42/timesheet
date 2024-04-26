@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
-import 'package:timesheet/common/controllers/hr_controllers/getall_verified_departemnets.dart';
-import 'package:timesheet/common/controllers/hr_controllers/hr_create_project_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_create_task_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/my_departments_controller.dart';
 
 class HRCreateTask extends StatefulWidget {
   HRCreateTask({
@@ -24,11 +23,12 @@ class _HRCreateTaskState extends State<HRCreateTask> {
 
   //
 
-  final AllDepartmentList adl = AllDepartmentList();
+  // final AllDepartmentList mdc = AllDepartmentList();  //not to use all but only my departments
+  final MyDepartmentsController mdc = MyDepartmentsController();
   List<dynamic> deptNames = [];
   getData() async {
-    await adl.getAllDepartments();
-    deptNames = AllDepartmentList.verifiedDepartmentList;
+    await mdc.getMyDepartments();
+    deptNames = await mdc.getMyDepartments();
     setState(() {});
   }
 
@@ -158,7 +158,7 @@ class _HRCreateTaskState extends State<HRCreateTask> {
                 items: deptNames
                     .map((dept) => DropdownMenuItem<int>(
                           value: dept.id,
-                          child: Text('${dept.name}'),
+                          child: Text('${dept.deptName}'),
                         ))
                     .toList(),
                 onChanged: (value) {
@@ -218,7 +218,6 @@ class _HRCreateTaskState extends State<HRCreateTask> {
           ),
         ]),
       ),
-
       // backgroundColor: Colors.transparent,
     );
   }

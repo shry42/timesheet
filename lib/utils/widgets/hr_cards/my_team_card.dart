@@ -68,7 +68,7 @@ class MyTeamCard extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          'email :  $email',
+                          'Email :  $email',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

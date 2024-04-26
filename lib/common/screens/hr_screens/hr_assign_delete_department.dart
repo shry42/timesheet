@@ -204,6 +204,7 @@ class _HRUserAssignAddDepartmentListState
                           await adc.addDepartment(
                               _selectedDepartmentIds, widget.id.toString());
                           setState(() {});
+                          _selectedDepartmentIds.clear();
                           // }
                         },
                         child: const Row(

@@ -6,33 +6,34 @@ import 'package:timesheet/common/screens/hr_screens/hr_create_view_attributes.da
 import 'package:timesheet/common/screens/hr_screens/hr_create_view_projects.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_create_view_tasks.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_departments.dart';
-import 'package:timesheet/common/screens/hr_screens/hr_myteam.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_profile_settings.dart';
-import 'package:timesheet/common/screens/hr_screens/hr_users_list.dart';
+import 'package:timesheet/common/screens/hr_screens/my_timesheet.dart';
+import 'package:timesheet/common/screens/user_screens/user_screen_is_manager_screen.dart';
 
-class BottomNavSuperAdmin extends StatefulWidget {
+class BottomNavUsers extends StatefulWidget {
   final int initialIndex;
 
-  const BottomNavSuperAdmin({Key? key, this.initialIndex = 0})
-      : super(key: key);
+  const BottomNavUsers({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
-  State<BottomNavSuperAdmin> createState() => _BottomNavSuperAdminState();
+  State<BottomNavUsers> createState() => _BottomNavUsersState();
 }
 
-class _BottomNavSuperAdminState extends State<BottomNavSuperAdmin> {
+class _BottomNavUsersState extends State<BottomNavUsers> {
   BottomNavigationController bnc = BottomNavigationController();
 
   int _page = 0;
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   List pages = [
-    const UsersHRScreen(title: 'Users List'),
-    const HRMyProjects(title: 'All Projects'),
-    const DepartmentsHRScreen(title: 'Departments'),
+    const UsersManagerScreen(title: 'My Team List'),
+    const HRMyProjects(title: 'My Projects'),
+    // const DepartmentsHRScreen(title: 'Departments'),
     const HRMyTasks(title: 'Tasks List'),
-    const HRMyAttributes(title: 'Attributes List'),
-    const MyTeamScreen(title: 'Verify Team\'s Timesheet'),
+    // const HRMyAttributes(title: 'Attributes List'),
+    const MyTimesheetScreen(
+      title: 'My TimeSheet',
+    ),
     const HRSettingsScreen(title: 'Profile'),
   ];
 
@@ -59,9 +60,9 @@ class _BottomNavSuperAdminState extends State<BottomNavSuperAdmin> {
           items: const <Widget>[
             Icon(Icons.description, size: 26, color: Colors.white),
             Icon(Icons.book, size: 26, color: Colors.white),
-            Icon(Icons.list_alt_outlined, size: 26, color: Colors.white),
+            // Icon(Icons.list_alt_outlined, size: 26, color: Colors.white),
             Icon(Icons.task_outlined, size: 26, color: Colors.white),
-            Icon(Icons.attractions, size: 26, color: Colors.white),
+            // Icon(Icons.attractions, size: 26, color: Colors.white),
             Icon(Icons.desktop_mac_rounded, size: 26, color: Colors.white),
             Icon(Icons.person, size: 26, color: Colors.white),
           ],

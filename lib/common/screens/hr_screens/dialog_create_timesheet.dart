@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_task_by_department_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_attributes_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_get_users_project_controller.dart';
-import 'package:timesheet/common/controllers/hr_controllers/hr_my_projects_controller.dart';
 import 'package:timesheet/common/models/hr_models/get_timesheet_log_model.dart';
 
 class Dialog_create_timesheet_screen extends StatefulWidget {
@@ -134,7 +133,7 @@ class _Dialog_create_timesheet_screenState
     }
     if (descCont.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Description cannot be empty')),
+        const SnackBar(content: Text('Description cannot be empty')),
       );
       return;
     }
@@ -164,8 +163,11 @@ class _Dialog_create_timesheet_screenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(shrinkWrap: true, children: [
-        SingleChildScrollView(
+      appBar: AppBar(
+        title: const Text('Fill Timesheet'),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(children: [
             const SizedBox(height: 15),
             Padding(
@@ -185,9 +187,18 @@ class _Dialog_create_timesheet_screenState
                   ),
                   // value: widget.reportingManagerId,
                   items: projectList
-                      .map((project) => DropdownMenuItem<int>(
-                            value: project.projectId,
-                            child: Text('${project.projectName}'),
+                      .fold<Map<int, String>>({}, (map, project) {
+                        if (map.containsKey(project.projectId)) {
+                          map[project.projectId] = '${project.projectName}';
+                        } else {
+                          map[project.projectId] = project.projectName;
+                        }
+                        return map;
+                      })
+                      .entries
+                      .map((entry) => DropdownMenuItem<int>(
+                            value: entry.key,
+                            child: Text(entry.value),
                           ))
                       .toList(),
                   onChanged: (value) {
@@ -195,6 +206,7 @@ class _Dialog_create_timesheet_screenState
                       departmentId = projectList
                           .firstWhere((project) => project.projectId == value)
                           .departmentId;
+
                       projectId = value;
                       getTaskData();
                     });
@@ -570,10 +582,12 @@ class _Dialog_create_timesheet_screenState
                 ),
               ],
             ),
+
+            const SizedBox(height: 25),
             //
           ]),
         ),
-      ]),
+      ),
     );
   }
 }

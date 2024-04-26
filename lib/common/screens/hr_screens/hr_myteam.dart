@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_myteam_controller.dart';
+import 'package:timesheet/common/screens/superadmin_screens/verify_users_timesheet_screen.dart';
 import 'package:timesheet/utils/widgets/hr_cards/my_team_card.dart';
 
 class MyTeamScreen extends StatefulWidget {
@@ -107,26 +109,18 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
                         itemCount: snapshot.data.length,
                         itemBuilder: (ctx, index) => GestureDetector(
                           onTap: () async {
-                            // String attributeName = snapshot.data[index].name;
-                            // String description =
-                            //     snapshot.data[index].description;
-                            // int attributeId = snapshot.data[index].id;
-
-                            // if (AppController.role == 'hrManager') {
-                            //   Get.to(HRUpdateAttribute(
-                            //     description: description,
-                            //     attributeName: attributeName,
-                            //     attributeId: attributeId,
-                            //     title: 'Update Attribute',
-                            //   ));
-                            // }
+                            String userId = snapshot.data![index].id.toString();
+                            Get.to(
+                              VerifyUsersTimesheetScreen(
+                                  title: 'Verify Timesheet', userId: userId),
+                            );
                           },
                           child: MyTeamCard(
                               ht: 80,
                               wd: 400,
                               duration: 400,
                               name:
-                                  "${snapshot.data![index].firstName}   ${snapshot.data![index].lastName}",
+                                  "${snapshot.data![index].firstName} ${snapshot.data![index].lastName}",
                               email: snapshot.data![index].email.toString()),
                         ),
                       ),
@@ -140,4 +134,6 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
       ]),
     );
   }
+
+  //
 }

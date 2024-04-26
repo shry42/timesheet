@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
-import 'package:timesheet/common/controllers/superadmin_controllers/verify_dept_controller.dart';
+import 'package:timesheet/common/controllers/superadmin_controllers/verify_users_timesheet_controller.dart';
 import 'package:timesheet/utils/toast_notify.dart';
 
-class DialogBoxVerfiyRemarkDept extends StatelessWidget {
+// ignore: must_be_immutable
+class DialogBoxVerfiyReasonTimesheet extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController remarkController = TextEditingController();
-  final VerifyDepartmentController vdc = Get.put(VerifyDepartmentController());
+  TextEditingController reasonController = TextEditingController();
+  final VerifyUsersTimesheetController vutc =
+      Get.put(VerifyUsersTimesheetController());
 
-  DialogBoxVerfiyRemarkDept({
+  DialogBoxVerfiyReasonTimesheet({
     super.key,
-    required this.verify,
-    required this.departmentId,
+    required this.userId,
+    required this.date,
   });
 
-  final int departmentId;
-  final String verify;
+  final int userId;
+  final String date;
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +31,18 @@ class DialogBoxVerfiyRemarkDept extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
               validator: (value) {
-                if (value == null || value.isEmpty || value == "") {
-                  return 'Please add remark';
+                if (value == null || value.isEmpty) {
+                  return 'Please add reason';
                 }
                 return null;
               },
               decoration: InputDecoration(
-                labelText: 'Remark',
+                labelText: 'Reason',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              // obscureText: true,
-              controller: remarkController,
-              // onChanged: (value) {
-              //   vtc.remark.value = remarkController.text;
-              // },
+              controller: reasonController,
             ),
           ),
           const SizedBox(
@@ -59,18 +57,22 @@ class DialogBoxVerfiyRemarkDept extends StatelessWidget {
               ),
             ),
             onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                await VerifyDepartmentController().VerifyDepartment(
-                  departmentId,
-                  verify,
-                  remarkController.text,
-                );
-                toast(AppController.message);
-                Get.offAll(const BottomNavHR(
-                  initialIndex: 3,
-                ));
+              if (_formKey.currentState != null) {
+                if (_formKey.currentState!.validate()) {
+                  if (reasonController.text.isNotEmpty) {
+                    await vutc.verifyTimesheet(
+                        userId, 'Rejected', date, reasonController.text);
+                    toast(AppController.message);
+                    Get.back();
+                  } else {
+                    toast('Please add reason');
+                  }
+                } else {
+                  toast('Please add reason');
+                }
               } else {
-                toast('Failed to Reject');
+                // Handle case where form state is null
+                toast('Please add reason');
               }
             },
             child: const Text(

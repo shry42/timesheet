@@ -3,10 +3,8 @@ import 'package:get/get.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_users_dept_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_my_projects_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_users_controller.dart';
-import 'package:timesheet/common/controllers/project_share_controllers/project_shared_by_me_controller.dart';
 import 'package:timesheet/common/controllers/project_share_controllers/share_project_to_managers_controller.dart';
 import 'package:timesheet/common/models/hr_models/hr_users_model.dart';
-import 'package:timesheet/common/screens/project_share_screens/project_shared_by_me.dart';
 
 class ShareProjectDialogScreen extends StatefulWidget {
   const ShareProjectDialogScreen({

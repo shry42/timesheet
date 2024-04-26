@@ -12,6 +12,7 @@ class loginController extends GetxController {
   String token = "";
   String role = "";
   UserDetails? user;
+  int? isManager;
 
   List<HRLoginDeptDetListModel> deptList = [];
 
@@ -51,6 +52,7 @@ class loginController extends GetxController {
       token = result['token'];
       int? mainUid = user!.id;
       role = user!.role!;
+      isManager = user!.isManager;
       AppController.setisManager(user!.isManager);
       AppController.setisVerified(user!.isVerified);
       AppController.setUserName('${user!.firstName} ${user!.lastName}');

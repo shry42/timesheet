@@ -57,7 +57,9 @@ class _HRMyAttributesState extends State<HRMyAttributes> {
                   ),
                 ),
                 const Spacer(),
-                if (AppController.role == 'hrManager')
+                // if (AppController.role == 'hrManager' ||
+                //     AppController.isManager == 1)
+                if (AppController.role != 'superAdmin')
                   Shimmer(
                     duration: const Duration(seconds: 2),
                     // This is NOT the default value. Default value: Duration(seconds: 0)
@@ -76,7 +78,7 @@ class _HRMyAttributesState extends State<HRMyAttributes> {
                       },
                       child: Container(
                         height: 30,
-                        width: 100,
+                        width: 120,
                         decoration: BoxDecoration(
                             border: Border.all(),
                             color: Colors.white70,

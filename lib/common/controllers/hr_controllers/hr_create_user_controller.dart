@@ -56,34 +56,34 @@ class CreateUserController extends GetxController {
             ));
           },
         );
-      } else if (response.statusCode != 200) {
-        Map<String, dynamic> result = json.decode(response.body);
-        bool? status = result['status'];
-        String title = result['title'];
-        String message = result['message'];
+      }
+    } else if (response.statusCode != 200) {
+      Map<String, dynamic> result = json.decode(response.body);
+      // bool? status = result['status'];
+      String title = result['title'];
+      String message = result['message'];
 
-        if (title == 'Validation Failed') {
-          Get.defaultDialog(
-            title: "Error",
-            middleText: message,
-            textConfirm: "OK",
-            confirmTextColor: Colors.white,
-            onConfirm: () {
-              Get.back(); // Close the dialog
-            },
-          );
-        } else if (title == 'Unauthorized') {
-          Get.defaultDialog(
-            title: "Error",
-            middleText: "$message \nplease re login",
-            textConfirm: "OK",
-            confirmTextColor: Colors.white,
-            onConfirm: () {
-              Get.offAll(LoginPage());
-              // Get.back(); // Close the dialog
-            },
-          );
-        }
+      if (title == 'Validation Failed') {
+        Get.defaultDialog(
+          title: "Error",
+          middleText: message,
+          textConfirm: "OK",
+          confirmTextColor: Colors.white,
+          onConfirm: () {
+            Get.back(); // Close the dialog
+          },
+        );
+      } else if (title == 'Unauthorized') {
+        Get.defaultDialog(
+          title: "Error",
+          middleText: "$message \nplease re login",
+          textConfirm: "OK",
+          confirmTextColor: Colors.white,
+          onConfirm: () {
+            Get.offAll(LoginPage());
+            // Get.back(); // Close the dialog
+          },
+        );
       }
     }
   }

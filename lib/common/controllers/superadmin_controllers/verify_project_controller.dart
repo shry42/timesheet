@@ -5,17 +5,22 @@ import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/services/api_service.dart';
 
 class VerifyProjectController extends GetxController {
-  Future verifyProject(int projectId, String verify) async {
+  Future verifyProject(int projectId, String verify, String remark) async {
+    Map<String, dynamic> requestBody = {
+      "projectId": projectId,
+      "verify": verify,
+    };
+
+    if (remark != null && remark.isNotEmpty) {
+      requestBody["remark"] = remark;
+    }
     http.Response response = await http.put(
       Uri.parse('${ApiService.baseUrl}/api/project/verifyProject'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${AppController.accessToken}',
       },
-      body: jsonEncode({
-        "projectId": projectId,
-        "verify": verify,
-      }),
+      body: json.encode(requestBody),
     );
     if (response.statusCode != 200) {
       Map<String, dynamic> result = jsonDecode(response.body);

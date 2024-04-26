@@ -12,11 +12,11 @@ class DialogBoxVerfiyRemarkTask extends StatelessWidget {
 
   DialogBoxVerfiyRemarkTask({
     super.key,
-    required this.taskId,
+    this.taskId,
     required this.verify,
   });
 
-  final int taskId;
+  final List? taskId;
   final String verify;
 
   @override
@@ -59,7 +59,7 @@ class DialogBoxVerfiyRemarkTask extends StatelessWidget {
                 if (_formKey.currentState!.validate()) {
                   if (remarkController.text.isNotEmpty) {
                     await VerifyTaskController().verifyTask(
-                      taskId,
+                      taskId as List,
                       verify,
                       remarkController.text,
                     );

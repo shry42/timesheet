@@ -38,8 +38,10 @@ class HRUsersController extends GetxController {
       }
 
       // Filter users where isManager is 1
-      managersList =
-          hrUserListObj.where((user) => user.isManager == 1).toList();
+      managersList = hrUserListObj
+          .where(
+              (user) => user.isManager == 1 && user.id != AppController.mainUid)
+          .toList();
 
       return hrUserListObj;
     }

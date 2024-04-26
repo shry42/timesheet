@@ -8,9 +8,10 @@ class HRUsersCard extends StatelessWidget {
     this.duration,
     required this.name,
     required this.email,
-    required this.mobile,
-    required this.reportingManager,
+    this.mobile,
+    this.reportingManager,
     this.isManager,
+    this.rejectReason,
   }) : super(key: key);
 
   final double? ht;
@@ -18,9 +19,10 @@ class HRUsersCard extends StatelessWidget {
   final dynamic duration;
   final String name;
   final String email;
-  final String mobile;
-  final String reportingManager;
+  final String? mobile;
+  final String? reportingManager;
   final String? isManager;
+  final String? rejectReason;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class HRUsersCard extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          'UserName   :   $name',
+                          'Username   :   $name',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -74,7 +76,7 @@ class HRUsersCard extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          'email :  $email',
+                          'Email :  $email',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -85,57 +87,78 @@ class HRUsersCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'mobile :  $mobile',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (mobile != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Mobile :  $mobile',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'reportingManager :  $reportingManager',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (reportingManager != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Reporting manager :  $reportingManager',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'isManager :  $isManager',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (isManager != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Is manager :  $isManager',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                if (rejectReason != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Rejected Reason :  $rejectReason',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 const SizedBox(height: 10),
               ]),
               //

@@ -55,11 +55,10 @@ class PostTimeSheetLogController extends GetxController {
           });
     } else if (response.statusCode == 400) {
       Map<String, dynamic> result = json.decode(response.body);
-      List<dynamic> data = result['data'];
-
+      String title = result['title'];
       String message = result['message'];
       Get.defaultDialog(
-          title: 'Oops!',
+          title: title,
           middleText: message,
           onConfirm: () {
             Get.back();

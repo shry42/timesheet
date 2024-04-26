@@ -102,6 +102,7 @@ class _ProjectSharedByMeScreenState extends State<ProjectSharedByMeScreen> {
                   child: GestureDetector(
                     onTap: () {
                       Get.defaultDialog(
+                        barrierDismissible: false,
                         backgroundColor:
                             const Color.fromARGB(255, 195, 215, 196),
                         title: 'Share Project',

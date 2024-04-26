@@ -3,8 +3,10 @@ class MyTeamModel {
   String? firstName;
   String? lastName;
   String? email;
+  int? isManager;
 
-  MyTeamModel({this.id, this.firstName, this.lastName, this.email});
+  MyTeamModel(
+      {this.id, this.firstName, this.lastName, this.email, this.isManager});
 
   factory MyTeamModel.fromJson(Map<String, dynamic> json) {
     return MyTeamModel(
@@ -12,6 +14,7 @@ class MyTeamModel {
       firstName: json['firstName'],
       lastName: json['lastName'],
       email: json['email'],
+      isManager: json['isManager'],
     );
   }
 }

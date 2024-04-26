@@ -5,11 +5,11 @@ import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/controllers/hr_controllers/delete_log_controller.dart';
+import 'package:timesheet/common/controllers/hr_controllers/get_all_projects_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_task_by_department_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_timesheet_log_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_attributes_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_create_attribute_controller.dart';
-import 'package:timesheet/common/controllers/hr_controllers/hr_my_projects_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_tasks_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/post_timesheet_log_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/submit_timesheet_controller.dart';
@@ -53,7 +53,9 @@ class _CreateTimesheetScreenState extends State<CreateTimesheetScreen> {
   final SubmitTimeSheetController stsc = SubmitTimeSheetController();
 
   // getUsersProjectsController upc = getUsersProjectsController();
-  HRMyProjectsController mpc = HRMyProjectsController();
+  // HRMyProjectsController mpc = HRMyProjectsController();
+  final AllProjectsController apc = AllProjectsController();
+
   final GetTaskByDeptIdController gtbydc = GetTaskByDeptIdController();
   final HRAttributesController ac = HRAttributesController();
   final HRTasksController allTasksCont = HRTasksController();
@@ -74,7 +76,7 @@ class _CreateTimesheetScreenState extends State<CreateTimesheetScreen> {
 
   getData() async {
     // await mpc.myProjects();
-    projectList = await mpc.myProjects();
+    projectList = await apc.allProjects();
     // attributesList = await ac.attributes();
     // allTaskList = await allTasksCont.tasks();
     // deptNames = AllDepartmentList.verifiedDepartmentList;
@@ -271,142 +273,170 @@ class _CreateTimesheetScreenState extends State<CreateTimesheetScreen> {
               Column(children: [
                 Container(
                   height: 530,
-                  child: Expanded(
-                    child: Builder(builder: (
-                      BuildContext context,
-                    ) {
-                      if (AllLogDataList == null || AllLogDataList!.isEmpty) {
-                        return const Center(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [Text('No records found')],
-                        ));
-                      } else {
-                        return ListView.builder(
-                          itemCount: AllLogDataList!.length,
-                          itemBuilder: (context, index) {
-                            //For Project
-                            var project = projectList.firstWhere(
-                              (project) =>
-                                  project.id == AllLogDataList[index].projectId,
-                            );
-                            String projectName = project != null
-                                ? project.name
-                                : 'Unknown Project';
+                  child: Builder(builder: (
+                    BuildContext context,
+                  ) {
+                    if (AllLogDataList == null || AllLogDataList!.isEmpty) {
+                      return const Center(
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [Text('No records found')],
+                      ));
+                    } else {
+                      return ListView.builder(
+                        itemCount: AllLogDataList!.length,
+                        itemBuilder: (context, index) {
+                          //For Project
+                          var project = projectList.firstWhere(
+                            (project) =>
+                                project.id == AllLogDataList[index].projectId,
+                          );
+                          String projectName = project != null
+                              ? project.name
+                              : 'Unknown Project';
 
-                            //For attribute
-                            var attribute = attributesList.firstWhere(
-                              (attribute) =>
-                                  attribute.id == AllLogDataList[index].attrId,
-                            );
-                            String attributeName = attribute != null
-                                ? attribute.name
-                                : 'Unknown attribute';
+                          //For attribute
+                          var attribute = attributesList.firstWhere(
+                            (attribute) =>
+                                attribute.id == AllLogDataList[index].attrId,
+                          );
+                          String attributeName = attribute != null
+                              ? attribute.name
+                              : 'Unknown attribute';
 
-                            //For Tasks
+                          //For Tasks
 
-                            //For attribute
-                            var allTasks = allTaskList.firstWhere(
-                              (task) => task.id == AllLogDataList[index].taskId,
-                            );
-                            String taskName = allTasks != null
-                                ? allTasks.task
-                                : 'Unknown attribute';
+                          //For attribute
+                          var allTasks = allTaskList.firstWhere(
+                            (task) => task.id == AllLogDataList[index].taskId,
+                          );
+                          String taskName = allTasks != null
+                              ? allTasks.task
+                              : 'Unknown attribute';
 
-                            return GestureDetector(
-                              onTap: () async {
-                                // Get.to(Dialog_log_timesheet_screen(
-                                //   projectName: projectName,
-                                //   taskName: taskName,
-                                //   attrName: attributeName,
-                                //   projectId: snapshot.data[index].projectId,
-                                //   taskId: snapshot.data[index].taskId,
-                                //   attrId: snapshot.data[index].taskId,
-                                // ));
+                          return GestureDetector(
+                            onTap: () async {
+                              Get.to(
+                                Dialog_log_timesheet_screen(
+                                  projectName: projectName,
+                                  taskName: taskName,
+                                  attrName: attributeName,
+                                  projectId:
+                                      AllLogDataList[index].projectId!.toInt(),
+                                  taskId: AllLogDataList[index].taskId!.toInt(),
+                                  attrId: AllLogDataList[index].taskId!.toInt(),
+                                  description: AllLogDataList[index]
+                                      .description
+                                      .toString(),
+                                  mon: AllLogDataList[index]
+                                      .taskDetails![widget.date1]!,
+                                  tue: AllLogDataList[index]
+                                      .taskDetails![widget.date2]!,
+                                  wed: AllLogDataList[index]
+                                      .taskDetails![widget.date3]!,
+                                  thu: AllLogDataList[index]
+                                      .taskDetails![widget.date4]!,
+                                  fri: AllLogDataList[index]
+                                      .taskDetails![widget.date5]!,
+                                  sat: AllLogDataList[index]
+                                      .taskDetails![widget.date6]!,
+                                  updateNewEntry: (newEntry) =>
+                                      updateNewEntry(index, newEntry),
+                                ),
+                              );
 
-                                //
+                              // Get.to(Dialog_log_timesheet_screen(
+                              //   projectName: projectName,
+                              //   taskName: taskName,
+                              //   attrName: attributeName,
+                              //   projectId: snapshot.data[index].projectId,
+                              //   taskId: snapshot.data[index].taskId,
+                              //   attrId: snapshot.data[index].taskId,
+                              // ));
 
-                                Get.to(
-                                  Get.defaultDialog(
-                                    barrierDismissible: false,
-                                    backgroundColor: const Color.fromARGB(
-                                        255, 195, 215, 196),
-                                    title: 'Logged Timesheet',
-                                    content: Dialog_log_timesheet_screen(
-                                      projectName: projectName,
-                                      taskName: taskName,
-                                      attrName: attributeName,
-                                      projectId: AllLogDataList[index]
-                                          .projectId!
-                                          .toInt(),
-                                      taskId:
-                                          AllLogDataList[index].taskId!.toInt(),
-                                      attrId:
-                                          AllLogDataList[index].taskId!.toInt(),
-                                      description: AllLogDataList[index]
-                                          .description
-                                          .toString(),
-                                      mon: AllLogDataList[index]
-                                          .taskDetails![widget.date1]!,
-                                      tue: AllLogDataList[index]
-                                          .taskDetails![widget.date2]!,
-                                      wed: AllLogDataList[index]
-                                          .taskDetails![widget.date3]!,
-                                      thu: AllLogDataList[index]
-                                          .taskDetails![widget.date4]!,
-                                      fri: AllLogDataList[index]
-                                          .taskDetails![widget.date5]!,
-                                      sat: AllLogDataList[index]
-                                          .taskDetails![widget.date6]!,
-                                    ),
+                              //
+
+                              // Get.to(
+                              //   Get.defaultDialog(
+                              //     barrierDismissible: false,
+                              //     backgroundColor: const Color.fromARGB(
+                              //         255, 195, 215, 196),
+                              //     title: 'Logged Timesheet',
+                              //     content:
+                              //      Dialog_log_timesheet_screen(
+                              //       projectName: projectName,
+                              //       taskName: taskName,
+                              //       attrName: attributeName,
+                              //       projectId: AllLogDataList[index]
+                              //           .projectId!
+                              //           .toInt(),
+                              //       taskId:
+                              //           AllLogDataList[index].taskId!.toInt(),
+                              //       attrId:
+                              //           AllLogDataList[index].taskId!.toInt(),
+                              //       description: AllLogDataList[index]
+                              //           .description
+                              //           .toString(),
+                              //       mon: AllLogDataList[index]
+                              //           .taskDetails![widget.date1]!,
+                              //       tue: AllLogDataList[index]
+                              //           .taskDetails![widget.date2]!,
+                              //       wed: AllLogDataList[index]
+                              //           .taskDetails![widget.date3]!,
+                              //       thu: AllLogDataList[index]
+                              //           .taskDetails![widget.date4]!,
+                              //       fri: AllLogDataList[index]
+                              //           .taskDetails![widget.date5]!,
+                              //       sat: AllLogDataList[index]
+                              //           .taskDetails![widget.date6]!,
+                              //     ),
+                              //   ),
+                              // );
+                            },
+                            child: Slidable(
+                              endActionPane: ActionPane(
+                                motion: const ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    // An action can be bigger than the others.
+                                    borderRadius: BorderRadius.circular(10),
+                                    flex: 1,
+                                    onPressed: (context) {
+                                      setState(() {
+                                        logId = AllLogDataList[index].logId;
+                                      });
+                                      if (logId == null) {
+                                        initState();
+                                      }
+                                      deleteLogFunction(context, logId!);
+                                    },
+                                    // ...
+                                    backgroundColor: Colors.transparent,
+                                    foregroundColor:
+                                        const Color.fromARGB(255, 105, 30, 30),
+                                    icon: Icons.delete,
+                                    label: 'Delete Log',
                                   ),
-                                );
-                              },
-                              child: Slidable(
-                                endActionPane: ActionPane(
-                                  motion: const ScrollMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      // An action can be bigger than the others.
-                                      borderRadius: BorderRadius.circular(10),
-                                      flex: 1,
-                                      onPressed: (context) {
-                                        setState(() {
-                                          logId = AllLogDataList[index].logId;
-                                        });
-                                        if (logId == null) {
-                                          initState();
-                                        }
-                                        deleteLogFunction(context, logId!);
-                                      },
-                                      // ...
-                                      backgroundColor: Colors.transparent,
-                                      foregroundColor: const Color.fromARGB(
-                                          255, 105, 30, 30),
-                                      icon: Icons.delete,
-                                      label: 'Delete Log',
-                                    ),
-                                  ],
-                                ),
-
-                                // The child of the Slidable is what the user sees when the
-                                // component is not dragged.
-                                child: TimesheetLogCard(
-                                  ht: 110,
-                                  wd: 400,
-                                  duration: 400,
-                                  Project: projectName,
-                                  Task: taskName,
-                                  Attribute: attributeName,
-                                ),
+                                ],
                               ),
-                            );
-                          },
-                        );
-                      }
-                    }),
-                  ),
+
+                              // The child of the Slidable is what the user sees when the
+                              // component is not dragged.
+                              child: TimesheetLogCard(
+                                ht: 110,
+                                wd: 400,
+                                duration: 400,
+                                Project: projectName,
+                                Task: taskName,
+                                Attribute: attributeName,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  }),
                 ),
                 //
                 Row(
@@ -486,6 +516,7 @@ class _CreateTimesheetScreenState extends State<CreateTimesheetScreen> {
                             textConfirm: "Submit",
                             confirmTextColor: Colors.white,
                             onConfirm: () async {
+                              Get.back();
                               await stsc.submitTimesheet(
                                   AllLogDataList, widget.date1);
                             },
@@ -519,6 +550,12 @@ class _CreateTimesheetScreenState extends State<CreateTimesheetScreen> {
   void addNewEntry(TimesheetEntry newEntry) {
     setState(() {
       AllLogDataList.add(newEntry);
+    });
+  }
+
+  void updateNewEntry(int index, TimesheetEntry newEntry) {
+    setState(() {
+      AllLogDataList[index] = newEntry;
     });
   }
 

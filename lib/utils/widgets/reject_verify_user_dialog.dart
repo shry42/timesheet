@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
-import 'package:timesheet/common/controllers/superadmin_controllers/verify_dept_controller.dart';
+import 'package:timesheet/common/controllers/superadmin_controllers/verify_users_controller.dart';
 import 'package:timesheet/utils/toast_notify.dart';
 
-class DialogBoxVerfiyRemarkDept extends StatelessWidget {
+class DialogBoxVerfiyUser extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController remarkController = TextEditingController();
-  final VerifyDepartmentController vdc = Get.put(VerifyDepartmentController());
+  TextEditingController rejectReasonController = TextEditingController();
+  final VerifyUsersController vuc = Get.put(VerifyUsersController());
 
-  DialogBoxVerfiyRemarkDept({
+  DialogBoxVerfiyUser({
     super.key,
     required this.verify,
-    required this.departmentId,
+    required this.userId,
   });
 
-  final int departmentId;
+  final int userId;
   final String verify;
 
   @override
@@ -29,8 +29,8 @@ class DialogBoxVerfiyRemarkDept extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
               validator: (value) {
-                if (value == null || value.isEmpty || value == "") {
-                  return 'Please add remark';
+                if (value == null || value.isEmpty) {
+                  return 'Please add Reject Reason';
                 }
                 return null;
               },
@@ -40,11 +40,7 @@ class DialogBoxVerfiyRemarkDept extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              // obscureText: true,
-              controller: remarkController,
-              // onChanged: (value) {
-              //   vtc.remark.value = remarkController.text;
-              // },
+              controller: rejectReasonController,
             ),
           ),
           const SizedBox(
@@ -59,18 +55,27 @@ class DialogBoxVerfiyRemarkDept extends StatelessWidget {
               ),
             ),
             onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                await VerifyDepartmentController().VerifyDepartment(
-                  departmentId,
-                  verify,
-                  remarkController.text,
-                );
-                toast(AppController.message);
-                Get.offAll(const BottomNavHR(
-                  initialIndex: 3,
-                ));
+              if (_formKey.currentState != null) {
+                if (_formKey.currentState!.validate()) {
+                  if (rejectReasonController.text.isNotEmpty) {
+                    await vuc.verifyUser(
+                      userId,
+                      verify,
+                      rejectReasonController.text,
+                    );
+                    toast(AppController.message);
+                    Get.offAll(const BottomNavHR(
+                      initialIndex: 0,
+                    ));
+                  } else {
+                    toast('Please add Reject Reason');
+                  }
+                } else {
+                  toast('Please add Reject Reason');
+                }
               } else {
-                toast('Failed to Reject');
+                // Handle case where form state is null
+                toast('Please add Reject Reason');
               }
             },
             child: const Text(

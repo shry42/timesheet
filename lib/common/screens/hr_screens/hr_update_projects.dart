@@ -6,7 +6,6 @@ import 'package:timesheet/common/controllers/hr_controllers/getall_verified_depa
 import 'package:timesheet/common/controllers/hr_controllers/hr_update_project_controller.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_assign_project.dart';
 import 'package:timesheet/utils/widgets/delete_project._dialog.dart';
-import 'package:timesheet/utils/widgets/delete_user_reason_dilaogbox.dart';
 
 class HRUpdateProject extends StatefulWidget {
   HRUpdateProject({
@@ -302,6 +301,7 @@ class _HRUpdateProjectState extends State<HRUpdateProject> {
                   if (pickedDate != null && pickedDate != _date) {
                     setState(() {
                       _date = pickedDate;
+                      startDate.text = _date.toString().split("00")[0];
                       // cpc.selectedStartDate.value = pickedDate.toString();
                     });
                   }
@@ -343,6 +343,7 @@ class _HRUpdateProjectState extends State<HRUpdateProject> {
                   if (pickedDate != null && pickedDate != _date) {
                     setState(() {
                       _date = pickedDate;
+                      endDate.text = _date.toString().split("00")[0];
                       // cpc.selectedEndDate.value = pickedDate.toString();
                     });
                   }

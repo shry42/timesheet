@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
+import 'package:timesheet/common/bottom_navigations/superadmin_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/screens/login_screen.dart';
 import 'package:timesheet/services/api_service.dart';
@@ -34,9 +35,18 @@ class UpdateAttributeController extends GetxController {
           textConfirm: "OK",
           confirmTextColor: Colors.white,
           onConfirm: () {
-            Get.offAll(const BottomNavHR(
-              initialIndex: 4,
-            ));
+            // Get.offAll(const BottomNavHR(
+            //   initialIndex: 4,
+            // ));
+            if (AppController.role == 'hrManager') {
+              Get.offAll(const BottomNavHR(
+                initialIndex: 4,
+              ));
+            } else if (AppController.role == 'superAdmin') {
+              Get.offAll(const BottomNavSuperAdmin(
+                initialIndex: 4,
+              ));
+            }
           },
         );
       } else if (response.statusCode != 200) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/controllers/pass_reset_controllers/password_reset_for_otp_controller.dart';
 import 'package:timesheet/common/controllers/pass_reset_controllers/reset_with_otp_controller.dart';
@@ -128,7 +127,6 @@ class _ResestPassScreenByOtpScreenState
                                   value == "") {
                                 return 'Please enter a valid Employee code';
                               }
-
                               return null;
                             },
                           ),
@@ -151,10 +149,12 @@ class _ResestPassScreenByOtpScreenState
                               hintText: 'New Password',
                             ),
                             validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value == "") {
-                                return 'Please enter new password';
+                              if (value!.isEmpty) {
+                                return "Please enter password";
+                              } else if (!RegExp(
+                                      r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$')
+                                  .hasMatch(value)) {
+                                return "Please enter a valid password (must be at least 8 characters long, contain 1 special character, 1 capital letter, and 1 number)";
                               }
                               return null;
                             },
@@ -178,12 +178,12 @@ class _ResestPassScreenByOtpScreenState
                               hintText: 'Enter conmfirm password',
                             ),
                             validator: (value) {
-                              if (value == null ||
-                                  value.isEmpty ||
-                                  value == "") {
-                                return 'Please enter confirm password';
+                              if (value!.isEmpty) {
+                                return "Please re enter password";
+                              } else if (conPassController.text !=
+                                  conPassController.text) {
+                                return "Password mismatch";
                               }
-                              return null;
                             },
                           ),
                         ),
@@ -216,15 +216,10 @@ class _ResestPassScreenByOtpScreenState
                         const SizedBox(height: 30),
                         Shimmer(
                           duration: const Duration(seconds: 2),
-                          // This is NOT the default value. Default value: Duration(seconds: 0)
                           interval: const Duration(seconds: 1),
-                          // This is the default value
                           color: Colors.white,
-                          // This is the default value
                           colorOpacity: 1,
-                          // This is the default value
                           enabled: true,
-                          // This is the default value
                           direction: const ShimmerDirection.fromLTRB(),
                           child: Container(
                             height: 50,

@@ -17,6 +17,14 @@ class AppController {
   static int? _depVerified;
   static int? _depActive;
 
+  static int? _verification;
+
+  static get verification => _verification;
+  static setVerification(value) {
+    _verification =
+        value; // for verify my timesheet's data with value as 1 and 0
+  }
+
   static get depName => _depName;
   static setdepName(value) {
     _depName = value;

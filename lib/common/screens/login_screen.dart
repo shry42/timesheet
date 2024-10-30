@@ -5,13 +5,14 @@ import 'package:get/get.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
 import 'package:timesheet/common/bottom_navigations/superadmin_navigation.dart';
-import 'package:timesheet/common/bottom_navigations/user_navigation.dart';
+import 'package:timesheet/common/bottom_navigations/user_is_manager_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/controllers/login_controllers.dart';
 import 'package:timesheet/common/custom_painter.dart';
 import 'package:timesheet/common/screens/hr_screens/my_timesheet.dart';
 import 'package:timesheet/common/screens/reset_pass_screen.dart';
 import 'package:timesheet/utils/toast_notify.dart';
+import 'package:timesheet/utils/widgets/forgot_password_mail.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -312,13 +313,20 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              setState(() {
-                                if (showDialog == false) {
-                                  showDialog = true;
-                                } else {
-                                  showDialog = false;
-                                }
-                              });
+                              // setState(() {
+                              //   if (showDialog == false) {
+                              //     showDialog = true;
+                              //   } else {
+                              //     showDialog = false;
+                              //   }
+                              // });
+                              Get.defaultDialog(
+                                barrierDismissible: false,
+                                backgroundColor:
+                                    const Color.fromARGB(255, 195, 215, 196),
+                                title: 'Enter Employee Id',
+                                content: ForgotPassWithMailScreen(),
+                              );
                             },
                             child: const Text(
                               'Forgot Password ?',
@@ -330,73 +338,73 @@ class _LoginPageState extends State<LoginPage> {
                           ),
 
                           //
-                          if (showDialog == true)
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color: const Color.fromRGBO(
-                                          188, 190, 230, 1)),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color:
-                                            Color.fromRGBO(143, 148, 251, .2),
-                                        blurRadius: 20.0,
-                                        offset: Offset(0, 10))
-                                  ]),
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: TextFormField(
-                                      controller: empIdResetController,
-                                      onChanged: (value) {
-                                        empIdResetController.text = value;
-                                      },
-                                      decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: "Employee Id",
-                                          hintStyle: TextStyle(
-                                              color: Colors.grey[700])),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+                          //   if (showDialog == true)
+                          //     Container(
+                          //       padding: const EdgeInsets.all(5),
+                          //       decoration: BoxDecoration(
+                          //           color: Colors.white,
+                          //           borderRadius: BorderRadius.circular(10),
+                          //           border: Border.all(
+                          //               color: const Color.fromRGBO(
+                          //                   188, 190, 230, 1)),
+                          //           boxShadow: const [
+                          //             BoxShadow(
+                          //                 color:
+                          //                     Color.fromRGBO(143, 148, 251, .2),
+                          //                 blurRadius: 20.0,
+                          //                 offset: Offset(0, 10))
+                          //           ]),
+                          //       child: Column(
+                          //         children: <Widget>[
+                          //           Container(
+                          //             padding: const EdgeInsets.all(2.0),
+                          //             child: TextFormField(
+                          //               controller: empIdResetController,
+                          //               onChanged: (value) {
+                          //                 empIdResetController.text = value;
+                          //               },
+                          //               decoration: InputDecoration(
+                          //                   border: InputBorder.none,
+                          //                   hintText: "Employee Id",
+                          //                   hintStyle: TextStyle(
+                          //                       color: Colors.grey[700])),
+                          //             ),
+                          //           )
+                          //         ],
+                          //       ),
+                          //     ),
 
-                          //
-                          const SizedBox(height: 10),
-                          if (showDialog == true)
-                            GestureDetector(
-                              onTap: () {
-                                if (empIdResetController.text != '') {
-                                  Get.to(ResestPassScreenByOtpScreen(
-                                    empId: empIdResetController.text,
-                                  ));
-                                } else {
-                                  toast('Please enter a valid Employee Id');
-                                }
-                              },
-                              child: Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    gradient: const LinearGradient(colors: [
-                                      Color.fromARGB(255, 117, 198, 25),
-                                      Color.fromARGB(255, 165, 240, 79),
-                                    ])),
-                                child: const Center(
-                                  child: Text(
-                                    "Submit",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ),
+                          //   //
+                          //   const SizedBox(height: 10),
+                          //   if (showDialog == true)
+                          //     GestureDetector(
+                          //       onTap: () {
+                          //         if (empIdResetController.text != '') {
+                          //           Get.to(ResestPassScreenByOtpScreen(
+                          //             empId: empIdResetController.text,
+                          //           ));
+                          //         } else {
+                          //           toast('Please enter a valid Employee Id');
+                          //         }
+                          //       },
+                          //       child: Container(
+                          //         height: 50,
+                          //         decoration: BoxDecoration(
+                          //             borderRadius: BorderRadius.circular(10),
+                          //             gradient: const LinearGradient(colors: [
+                          //               Color.fromARGB(255, 117, 198, 25),
+                          //               Color.fromARGB(255, 165, 240, 79),
+                          //             ])),
+                          //         child: const Center(
+                          //           child: Text(
+                          //             "Submit",
+                          //             style: TextStyle(
+                          //                 color: Colors.white,
+                          //                 fontWeight: FontWeight.bold),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
                         ],
                       ),
                     )

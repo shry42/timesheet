@@ -295,7 +295,7 @@ class _DepartmentsHRScreenState extends State<DepartmentsHRScreen> {
                                             }
                                           },
                                           child: HRDepartmentCard(
-                                            ht: 110,
+                                            ht: 90,
                                             wd: 400,
                                             duration: 400,
                                             name: dataList![index]
@@ -305,9 +305,9 @@ class _DepartmentsHRScreenState extends State<DepartmentsHRScreen> {
                                                 .createdAt
                                                 .toString()
                                                 .split("T")[0],
-                                            remark: dataList![index]
-                                                .remark
-                                                .toString(),
+                                            // remark: dataList![index]
+                                            //     .remark
+                                            //     .toString(),
                                           ),
                                         );
                                       });
@@ -359,7 +359,7 @@ class _DepartmentsHRScreenState extends State<DepartmentsHRScreen> {
                                             }
                                           },
                                           child: HRDepartmentCard(
-                                            ht: 110,
+                                            ht: 90,
                                             wd: 400,
                                             duration: 400,
                                             name: dataList![index]
@@ -369,9 +369,9 @@ class _DepartmentsHRScreenState extends State<DepartmentsHRScreen> {
                                                 .createdAt
                                                 .toString()
                                                 .split("T")[0],
-                                            remark: dataList![index]
-                                                .remark
-                                                .toString(),
+                                            // remark: dataList![index]
+                                            //     .remark
+                                            //     .toString(),
                                           ),
                                         );
                                       });
@@ -496,7 +496,7 @@ class _DepartmentsHRScreenState extends State<DepartmentsHRScreen> {
                                             }
                                           },
                                           child: HRDepartmentCard(
-                                            ht: 110,
+                                            ht: 90,
                                             wd: 400,
                                             duration: 400,
                                             name: dataList![index]
@@ -506,9 +506,9 @@ class _DepartmentsHRScreenState extends State<DepartmentsHRScreen> {
                                                 .createdAt
                                                 .toString()
                                                 .split("T")[0],
-                                            remark: dataList![index]
-                                                .remark
-                                                .toString(),
+                                            // remark: dataList![index]
+                                            //     .remark
+                                            //     .toString(),
                                           ),
                                         );
                                       });

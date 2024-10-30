@@ -340,7 +340,8 @@ class _HRMyTasksState extends State<HRMyTasks> {
                                             String? remark =
                                                 dataList?[index].remark;
                                             if (AppController.role ==
-                                                'hrManager') {
+                                                    'hrManager' ||
+                                                AppController.role == 'user') {
                                               Get.to(HRUpdateTasks(
                                                 description: description,
                                                 taskName: taskName,
@@ -413,7 +414,8 @@ class _HRMyTasksState extends State<HRMyTasks> {
                                             String? remark =
                                                 dataList?[index].remark;
                                             if (AppController.role ==
-                                                'hrManager') {
+                                                    'hrManager' ||
+                                                AppController.role == 'user') {
                                               Get.to(HRUpdateTasks(
                                                 description: description,
                                                 taskName: taskName,
@@ -486,7 +488,8 @@ class _HRMyTasksState extends State<HRMyTasks> {
                                             String? remark =
                                                 dataList?[index].remark;
                                             if (AppController.role ==
-                                                'hrManager') {
+                                                    'hrManager' ||
+                                                AppController.role == 'user') {
                                               Get.to(HRUpdateTasks(
                                                 description: description,
                                                 taskName: taskName,
@@ -561,7 +564,9 @@ class _HRMyTasksState extends State<HRMyTasks> {
                                               String? remark =
                                                   dataList?[index].remark;
                                               if (AppController.role ==
-                                                  'hrManager') {
+                                                      'hrManager' ||
+                                                  AppController.isManager ==
+                                                      1) {
                                                 Get.to(HRUpdateTasks(
                                                   description: description,
                                                   taskName: taskName,
@@ -640,7 +645,9 @@ class _HRMyTasksState extends State<HRMyTasks> {
                                               String? remark =
                                                   dataList?[index].remark;
                                               if (AppController.role ==
-                                                  'hrManager') {
+                                                      'hrManager' ||
+                                                  AppController.role ==
+                                                      'user') {
                                                 Get.to(HRUpdateTasks(
                                                   description: description,
                                                   taskName: taskName,
@@ -776,6 +783,7 @@ class _HRMyTasksState extends State<HRMyTasks> {
                                           child: ElevatedButton(
                                             onPressed: () async {
                                               await Get.to(Get.defaultDialog(
+                                                barrierDismissible: false,
                                                 backgroundColor:
                                                     const Color.fromARGB(
                                                         255, 195, 215, 196),
@@ -792,6 +800,7 @@ class _HRMyTasksState extends State<HRMyTasks> {
                                               if (AppController.message !=
                                                   null) {
                                                 Get.defaultDialog(
+                                                  barrierDismissible: false,
                                                   title: "Success!",
                                                   middleText:
                                                       "${AppController.message}",

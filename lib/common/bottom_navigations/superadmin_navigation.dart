@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:timesheet/common/bottom_navigations/bottom_nav_controller.dart';
+import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_create_view_attributes.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_create_view_projects.dart';
 import 'package:timesheet/common/screens/hr_screens/hr_create_view_tasks.dart';
@@ -68,6 +69,9 @@ class _BottomNavSuperAdminState extends State<BottomNavSuperAdmin> {
           onTap: (index) {
             if (bnc.selectedIndex.value != index) {
               bnc.selectedIndex.value = index;
+            }
+            if (bnc.selectedIndex.value == 5) {
+              AppController.setVerification(1);
             }
           },
         ),

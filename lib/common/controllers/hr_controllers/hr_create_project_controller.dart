@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
+import 'package:timesheet/common/bottom_navigations/user_is_manager_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/screens/login_screen.dart';
 import 'package:timesheet/services/api_service.dart';
@@ -42,9 +43,16 @@ class CreateProjectController extends GetxController {
           textConfirm: "OK",
           confirmTextColor: Colors.white,
           onConfirm: () {
-            Get.offAll(const BottomNavHR(
-              initialIndex: 1,
-            ));
+            if (AppController.role == 'hrManager') {
+              Get.offAll(const BottomNavHR(
+                initialIndex: 1,
+              ));
+            } else if (AppController.role == 'user' &&
+                AppController.isManager == 1) {
+              Get.offAll(const BottomNavUsers(
+                initialIndex: 1,
+              ));
+            }
           },
         );
       }

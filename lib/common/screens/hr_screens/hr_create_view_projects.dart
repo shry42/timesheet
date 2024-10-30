@@ -397,7 +397,7 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                             //     dataList![index].departmentId;
                                             if (AppController.role ==
                                                     'hrManager' ||
-                                                AppController.isManager == 1) {
+                                                AppController.role == 'user') {
                                               Get.to(HRUpdateProject(
                                                 title: 'Update Project',
                                                 name: name,
@@ -412,7 +412,7 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                             }
                                           },
                                           child: HRProjectsCard(
-                                            ht: 210,
+                                            ht: 190,
                                             wd: 400,
                                             duration: 400,
                                             name: dataList![index]
@@ -487,7 +487,8 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                                 dataList![index].departmentId;
 
                                             if (AppController.role ==
-                                                'hrManager') {
+                                                    'hrManager' ||
+                                                AppController.role == 'user') {
                                               Get.to(HRUpdateProject(
                                                 title: 'Update Project',
                                                 name: name,
@@ -501,7 +502,7 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                             }
                                           },
                                           child: HRProjectsCard(
-                                            ht: 210,
+                                            ht: 190,
                                             wd: 400,
                                             duration: 400,
                                             name: dataList![index]
@@ -576,7 +577,8 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                                 dataList![index].departmentId;
 
                                             if (AppController.role ==
-                                                'hrManager') {
+                                                    'hrManager' ||
+                                                AppController.role == 'user') {
                                               Get.to(HRUpdateProject(
                                                 title: 'Update Project',
                                                 name: name,
@@ -674,7 +676,8 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                                 dataList![index].departmentId;
 
                                             if (AppController.role ==
-                                                'hrManager') {
+                                                    'hrManager' ||
+                                                AppController.role == 'user') {
                                               Get.to(HRUpdateProject(
                                                 title: 'Update Project',
                                                 name: name,
@@ -703,7 +706,7 @@ class _HRMyProjectsState extends State<HRMyProjects> {
                                             }
                                           },
                                           child: HRProjectsCard(
-                                            ht: 210,
+                                            ht: 190,
                                             wd: 400,
                                             duration: 400,
                                             name: dataList![index]

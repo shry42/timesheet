@@ -91,6 +91,7 @@ class _UsersHRScreenState extends State<UsersHRScreen> {
                   direction: const ShimmerDirection.fromLTRB(),
                   child: GestureDetector(
                     onTap: () {
+                      AppController.setVerification(0);
                       Get.to(const MyTeamScreen(title: 'My Team List'));
                     },
                     child: Container(

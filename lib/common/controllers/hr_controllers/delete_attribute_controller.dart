@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
+import 'package:timesheet/common/screens/login_screen.dart';
 import 'package:timesheet/services/api_service.dart';
 
 class DeleteAttributeController extends GetxController {
@@ -46,9 +47,7 @@ class DeleteAttributeController extends GetxController {
           textConfirm: "OK",
           confirmTextColor: Colors.white,
           onConfirm: () {
-            Get.offAll(const BottomNavHR(
-              initialIndex: 0,
-            ));
+            Get.offAll(LoginPage());
             // Get.back(); // Close the dialog
           },
         );

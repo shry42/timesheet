@@ -26,14 +26,24 @@ class AssignProjectUsesrController extends GetxController {
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> result = json.decode(response.body);
-      bool? status = result['status'];
+      // bool? status = result['status'];
       String message = result['message'];
       AppController.setmessage(message);
     } else if (response.statusCode != 200) {
       Map<String, dynamic> result = json.decode(response.body);
-      bool? status = result['status'];
+      // bool? status = result['status'];
       String title = result['title'];
       String message = result['message'];
+
+      Get.defaultDialog(
+        title: 'Server Error',
+        middleText: "$message",
+        textConfirm: "OK",
+        confirmTextColor: Colors.white,
+        onConfirm: () {
+          Get.back(); // Close the dialog
+        },
+      );
 
       if (title == 'Validation Failed') {
         Get.defaultDialog(

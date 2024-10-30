@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_my_users_team_nested_list_controller.dart';
 import 'package:timesheet/utils/widgets/hr_cards/hr_users_card.dart';
@@ -22,6 +23,8 @@ class _NestedUsersManagerScreenState extends State<NestedUsersManagerScreen> {
   List? mainDataList;
   final double height = 100;
   final double width = 400;
+
+  int? userId;
 
   @override
   void initState() {
@@ -107,36 +110,15 @@ class _NestedUsersManagerScreenState extends State<NestedUsersManagerScreen> {
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () async {
-                              // String firstName =
-                              //     dataList![index].firstName;
-                              // String lastName =
-                              //     dataList![index].lastName;
-                              // String email = dataList![index].email;
-                              // String mobileNo =
-                              //     dataList![index].mobileNo;
-                              // int isManager =
-                              //     dataList![index].isManager;
-                              // int id = dataList![index].id;
-                              // int reportingManagerId =
-                              //     dataList![index].reportingManager;
-                              // String reportingManagerWithName =
-                              //     dataList![index]
-                              //         .reportingManagerWithName;
-                              // if (AppController.role == 'hrManager') {
-                              //   Get.to(HRUpdateUserScreen(
-                              //     title: 'Update User',
-                              //     id: id,
-                              //     firstName: firstName,
-                              //     lastName: lastName,
-                              //     email: email,
-                              //     mobileNo: mobileNo,
-                              //     isManager: isManager.toString(),
-                              //     reportingManagerId:
-                              //         reportingManagerId,
-                              //     reportingManagerWithName:
-                              //         reportingManagerWithName,
-                              //   ));
-                              // }
+                              userId = dataList![index].id;
+                              // Get.to(
+                              //   VerifyUsersTimesheetScreen(
+                              //       title: 'Verify Timesheet', userId: userId),
+                              // );
+                              Get.to(NestedUsersManagerScreen(
+                                title: 'Users list',
+                                userId: userId,
+                              ));
                             },
                             child: HRUsersCard(
                               ht: height,

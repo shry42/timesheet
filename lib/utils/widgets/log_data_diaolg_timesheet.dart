@@ -97,7 +97,7 @@ class _Dialog_log_timesheet_screenState
         satHours > 8) {
       // Show an error message if any of the day's hours exceed 8
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('day\'s hours cannot exceed 8')),
+        const SnackBar(content: Text('Day\'s hours cannot exceed 8 hrs')),
       );
       return;
     }

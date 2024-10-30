@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_task_by_department_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_attributes_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/hr_get_users_project_controller.dart';
@@ -108,7 +107,7 @@ class _Dialog_create_timesheet_screenState
         satHours > 8) {
       // Show an error message if any of the day's hours exceed 8
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('day\'s hours cannot exceed ')),
+        const SnackBar(content: Text('Day\'s hours cannot exceed 8 hrs')),
       );
       return;
     }
@@ -454,9 +453,9 @@ class _Dialog_create_timesheet_screenState
                       ),
                       height: 30,
                       width: 40,
-                      child: Center(child: const Text('Sat')),
+                      child: const Center(child: Text('Sat')),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Container(
                       // color: Colors.,
                       height: 30,

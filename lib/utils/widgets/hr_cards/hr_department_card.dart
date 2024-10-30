@@ -9,7 +9,7 @@ class HRDepartmentCard extends StatelessWidget {
     required this.name,
     // required this.isVerified,
     required this.createdAt,
-    required this.remark,
+    this.remark,
   }) : super(key: key);
 
   final double? ht;
@@ -18,7 +18,7 @@ class HRDepartmentCard extends StatelessWidget {
   final String name;
   // final String isVerified;
   final String createdAt;
-  final String remark;
+  final String? remark;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class HRDepartmentCard extends StatelessWidget {
               ),
             ),
             child: SingleChildScrollView(
-              // physics: const NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               child: Column(children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 15, left: 18),
@@ -100,23 +100,24 @@ class HRDepartmentCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 18),
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          'remark :  $remark',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                if (remark != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'remark :  $remark',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
                 const SizedBox(height: 10),
               ]),
               //

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
+import 'package:timesheet/common/bottom_navigations/superadmin_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/services/api_service.dart';
 
@@ -42,7 +43,7 @@ class VerifyDepartmentController extends GetxController {
       // AppController.setmessage(null);
       String message = result['message'];
       AppController.setmessage(message);
-      Get.offAll(const BottomNavHR(
+      Get.offAll(const BottomNavSuperAdmin(
         initialIndex: 3,
       ));
     }

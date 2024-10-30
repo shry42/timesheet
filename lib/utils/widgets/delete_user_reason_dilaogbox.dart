@@ -48,43 +48,73 @@ class DeleteReasonDialogBox extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(
-                  255, 195, 216, 201), // Change the button color here
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            onPressed: () async {
-              if (_formKey.currentState != null) {
-                if (_formKey.currentState!.validate()) {
-                  if (reasonController.text.isNotEmpty) {
-                    await duc.deleteUser(
-                      userId,
-                      reasonController.text,
-                    );
-                    toast(AppController.message);
-                    Get.offAll(const BottomNavHR(
-                      initialIndex: 0,
-                    ));
-                  } else {
-                    toast('Please add delete reason');
-                  }
-                } else {
-                  toast('Please add delete reason');
-                }
-              } else {
-                // Handle case where form state is null
-                toast('Please add delete reason');
-              }
-            },
-            child: const Text(
-              "Submit",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(
+                        255, 195, 216, 201), // Change the button color here
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: () async {
+                    if (_formKey.currentState != null) {
+                      if (_formKey.currentState!.validate()) {
+                        if (reasonController.text.isNotEmpty) {
+                          await duc.deleteUser(
+                            userId,
+                            reasonController.text,
+                          );
+                          toast(AppController.message);
+                          Get.offAll(const BottomNavHR(
+                            initialIndex: 0,
+                          ));
+                        } else {
+                          toast('Please add delete reason');
+                        }
+                      } else {
+                        toast('Please add delete reason');
+                      }
+                    } else {
+                      // Handle case where form state is null
+                      toast('Please add delete reason');
+                    }
+                  },
+                  child: const Text(
+                    "Submit",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ),
+
+                //
+
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(
+                        255, 195, 216, 201), // Change the button color here
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

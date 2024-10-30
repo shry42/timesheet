@@ -49,7 +49,7 @@ class HRTasksCard extends StatelessWidget {
               ),
             ),
             child: SingleChildScrollView(
-              // physics: const NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               child: Column(children: [
                 // Padding(
                 //   padding: const EdgeInsets.only(top: 15, left: 18),

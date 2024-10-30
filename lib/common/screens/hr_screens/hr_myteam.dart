@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism_ui/glassmorphism_ui.dart';
+import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/common/controllers/hr_controllers/get_myteam_controller.dart';
 import 'package:timesheet/common/screens/superadmin_screens/verify_users_timesheet_screen.dart';
+import 'package:timesheet/common/screens/user_screens/user_netsed_screen.dart';
 import 'package:timesheet/utils/widgets/hr_cards/my_team_card.dart';
 
 class MyTeamScreen extends StatefulWidget {
@@ -14,6 +16,7 @@ class MyTeamScreen extends StatefulWidget {
 }
 
 final MyTeamListController mtlc = MyTeamListController();
+int? userId;
 
 class _MyTeamScreenState extends State<MyTeamScreen> {
   @override
@@ -109,11 +112,19 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
                         itemCount: snapshot.data.length,
                         itemBuilder: (ctx, index) => GestureDetector(
                           onTap: () async {
-                            String userId = snapshot.data![index].id.toString();
-                            Get.to(
-                              VerifyUsersTimesheetScreen(
-                                  title: 'Verify Timesheet', userId: userId),
-                            );
+                            userId = snapshot.data![index].id;
+                            if (AppController.verification == 1) {
+                              Get.to(
+                                VerifyUsersTimesheetScreen(
+                                    title: 'Verify Timesheet',
+                                    userId: userId.toString()),
+                              );
+                            } else {
+                              Get.to(NestedUsersManagerScreen(
+                                title: 'Users list',
+                                userId: userId,
+                              ));
+                            }
                           },
                           child: MyTeamCard(
                               ht: 80,
@@ -134,6 +145,5 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
       ]),
     );
   }
-
   //
 }

@@ -7,6 +7,7 @@ import 'package:timesheet/services/api_service.dart';
 
 class HRUsersController extends GetxController {
   static List<HRAllUsersListModel> managersList = [];
+  static List<HRAllUsersListModel> managersListwithoutTheirName = [];
 
   getHRUsersList() async {
     List<HRAllUsersListModel> hrUserListObj = [];
@@ -38,7 +39,10 @@ class HRUsersController extends GetxController {
       }
 
       // Filter users where isManager is 1
-      managersList = hrUserListObj
+      managersList =
+          hrUserListObj.where((user) => user.isManager == 1).toList();
+      //
+      managersListwithoutTheirName = hrUserListObj
           .where(
               (user) => user.isManager == 1 && user.id != AppController.mainUid)
           .toList();

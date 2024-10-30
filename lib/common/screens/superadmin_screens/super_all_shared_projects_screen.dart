@@ -239,7 +239,7 @@ class _AllSharedProjectsScreenSuperState
                                         return GestureDetector(
                                           onTap: () async {},
                                           child: HRProjectsCard(
-                                            ht: 250,
+                                            ht: 260,
                                             wd: 400,
                                             duration: 400,
                                             name: dataList![index]
@@ -266,6 +266,20 @@ class _AllSharedProjectsScreenSuperState
                                                 dataList![index].sharedToName,
                                             sharedBy:
                                                 dataList![index].projectOwner,
+                                            sharedProjectStatus: dataList![
+                                                            index]
+                                                        .sharedProjectStatus ==
+                                                    0
+                                                ? 'In Progress'
+                                                : dataList![index]
+                                                            .sharedProjectStatus ==
+                                                        1
+                                                    ? 'Verified'
+                                                    : dataList![index]
+                                                                .sharedProjectStatus ==
+                                                            2
+                                                        ? 'Rejected'
+                                                        : 'Unknown',
                                           ),
                                         );
                                       });

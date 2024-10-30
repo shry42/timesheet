@@ -160,6 +160,7 @@ class _VerifyProjectScreenState extends State<VerifyProjectScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         await Get.to(Get.defaultDialog(
+                          barrierDismissible: false,
                           backgroundColor:
                               const Color.fromARGB(255, 195, 215, 196),
                           title: 'Add Remark',

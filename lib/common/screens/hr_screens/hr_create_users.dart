@@ -169,15 +169,9 @@ class _HRCreateUsersState extends State<HRCreateUsers> {
                   ],
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return "Please enter a first name";
-                    } else if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
-                      return "First name can only contain letters";
-                    }
-                    // Check if the input is a valid email address ending with '@gegadyne.com'
-                    var re = RegExp(
-                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@gegadyne\.com$');
-                    if (!re.hasMatch(value)) {
-                      return "Email must end with '@gegadyne.com'";
+                      return "Please enter a name";
+                    } else if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+                      return "Name can only contain alphabets and spaces";
                     }
                     return null;
                   },
@@ -217,29 +211,30 @@ class _HRCreateUsersState extends State<HRCreateUsers> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                 child: TextFormField(
-                  controller: emailController,
-                  // initialValue: widget.email,
-                  onChanged: (value) {
-                    // AppController.setemailId(emailController.text);
-                    // c.userName.value = emailController.text;
-                  },
-                  decoration: InputDecoration(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    controller: emailController,
+                    // initialValue: widget.email,
+                    onChanged: (value) {
+                      // AppController.setemailId(emailController.text);
+                      // c.userName.value = emailController.text;
+                    },
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 8),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      labelText: 'Email address',
                     ),
-                    labelText: 'Email address',
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Please enter an email";
-                    } else if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                      return "Please enter a valid email";
-                    }
-                    return null;
-                  },
-                ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Please enter an email";
+                      } else if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                        return "Please enter a valid email";
+                      } else if (!value.endsWith('@gegadyne.com')) {
+                        return "Please enter a valid gegadyne email (must end with @gegadyne.com)";
+                      }
+                      return null;
+                    }),
               ),
               Padding(
                 //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
@@ -273,25 +268,31 @@ class _HRCreateUsersState extends State<HRCreateUsers> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                 child: TextFormField(
-                    controller: passwordController,
-                    // initialValue: widget.lastName,
-                    onChanged: (value) {
-                      // AppController.setemailId(emailController.text);
-                      // c.userName.value = emailController.text;
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 8),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      labelText: 'Password',
+                  controller: passwordController,
+                  // initialValue: widget.lastName,
+                  onChanged: (value) {
+                    // AppController.setemailId(emailController.text);
+                    // c.userName.value = emailController.text;
+                  },
+                  decoration: InputDecoration(
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Please enter password";
-                      }
-                    }),
+                    labelText: 'Password',
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter password";
+                    } else if (!RegExp(
+                            r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$')
+                        .hasMatch(value)) {
+                      return "Please enter a valid password (must be at least 8 characters long, contain 1 special character, 1 capital letter, and 1 number)";
+                    }
+                    return null;
+                  },
+                ),
               ),
               Padding(
                 //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
@@ -315,6 +316,9 @@ class _HRCreateUsersState extends State<HRCreateUsers> {
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Please re enter password";
+                    } else if (passwordController.text !=
+                        confirmPassController.text) {
+                      return "Password mismatch";
                     }
                   },
                 ),
@@ -497,15 +501,10 @@ class _HRCreateUsersState extends State<HRCreateUsers> {
               const SizedBox(height: 20),
               Shimmer(
                 duration: const Duration(seconds: 2),
-                // This is NOT the default value. Default value: Duration(seconds: 0)
                 interval: const Duration(seconds: 1),
-                // This is the default value
                 color: Colors.white,
-                // This is the default value
                 colorOpacity: 1,
-                // This is the default value
                 enabled: true,
-                // This is the default value
                 direction: const ShimmerDirection.fromLTRB(),
                 child: Container(
                   height: 42,

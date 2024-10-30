@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
+import 'package:timesheet/common/bottom_navigations/user_is_manager_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
 import 'package:timesheet/services/api_service.dart';
 import 'package:timesheet/utils/toast_notify.dart';
@@ -24,17 +25,28 @@ class ShareProjectToManagerController extends GetxController {
       Map<String, dynamic> result = json.decode(response.body);
       String message = result['message'];
       toast(message);
-      Get.offAll(const BottomNavHR(
-        initialIndex: 1,
-      ));
+      if (AppController.role == 'hrManager') {
+        Get.offAll(const BottomNavHR(
+          initialIndex: 1,
+        ));
+      } else if (AppController.role == 'user') {
+        Get.offAll(const BottomNavUsers(
+          initialIndex: 1,
+        ));
+      }
     } else if (response.statusCode != 200) {
       Map<String, dynamic> result = json.decode(response.body);
       String message = result['message'];
       toast(message);
-      Get.offAll(const BottomNavHR(
-        initialIndex: 1,
-      ));
-      // Get.back();
+      if (AppController.role == 'hrManager') {
+        Get.offAll(const BottomNavHR(
+          initialIndex: 1,
+        ));
+      } else if (AppController.role == 'user') {
+        Get.offAll(const BottomNavUsers(
+          initialIndex: 1,
+        ));
+      }
     }
   }
 }

@@ -269,6 +269,7 @@ class _HRSettingsScreenState extends State<HRSettingsScreen> {
                     ),
                     onPressed: () {
                       Get.to(Get.defaultDialog(
+                        barrierDismissible: false,
                         backgroundColor:
                             const Color.fromARGB(255, 195, 215, 196),
                         title: 'Reset Password !',
@@ -290,6 +291,7 @@ class _HRSettingsScreenState extends State<HRSettingsScreen> {
                       AppController.setmeetingId(null);
                       AppController.setaccessToken(null);
                       AppController.setmessage(null);
+                      AppController.setisManager(null);
                       Get.offAll(LoginPage());
                     },
                     child: const Text('Log out')),

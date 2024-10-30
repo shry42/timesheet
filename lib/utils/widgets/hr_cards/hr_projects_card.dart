@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 
 class HRProjectsCard extends StatelessWidget {
-  const HRProjectsCard({
-    Key? key,
-    this.ht,
-    this.wd,
-    this.duration,
-    required this.name,
-    required this.description,
-    required this.code,
-    required this.startDate,
-    required this.endDate,
-    required this.createdAt,
-    this.remark,
-    this.deptName,
-    this.sharedTo,
-    this.sharedBy,
-  }) : super(key: key);
+  const HRProjectsCard(
+      {Key? key,
+      this.ht,
+      this.wd,
+      this.duration,
+      required this.name,
+      required this.description,
+      required this.code,
+      required this.startDate,
+      required this.endDate,
+      required this.createdAt,
+      this.remark,
+      this.deptName,
+      this.sharedTo,
+      this.sharedBy,
+      this.sharedProjectStatus})
+      : super(key: key);
 
   final double? ht;
   final double? wd;
@@ -31,6 +32,7 @@ class HRProjectsCard extends StatelessWidget {
   final String? deptName;
   final String? sharedTo;
   final String? sharedBy;
+  final String? sharedProjectStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,7 @@ class HRProjectsCard extends StatelessWidget {
               ),
             ),
             child: SingleChildScrollView(
-              // physics: const NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               child: Column(children: [
                 if (name != null)
                   Padding(
@@ -230,6 +232,24 @@ class HRProjectsCard extends StatelessWidget {
                         Flexible(
                           child: Text(
                             'Shared By :  $sharedBy',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (sharedProjectStatus != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, left: 18),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            'Shared Status :  $sharedProjectStatus',
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

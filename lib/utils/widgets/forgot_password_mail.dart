@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:timesheet/common/bottom_navigations/hr_bottom_navigation.dart';
-import 'package:timesheet/common/bottom_navigations/superadmin_navigation.dart';
 import 'package:timesheet/common/controllers/app_controller.dart';
-import 'package:timesheet/common/controllers/superadmin_controllers/verify_users_controller.dart';
+import 'package:timesheet/common/controllers/hr_delete_controller.dart';
+import 'package:timesheet/common/screens/reset_pass_screen.dart';
 import 'package:timesheet/utils/toast_notify.dart';
 
-class DialogBoxVerfiyUser extends StatelessWidget {
+class ForgotPassWithMailScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController rejectReasonController = TextEditingController();
-  final VerifyUsersController vuc = Get.put(VerifyUsersController());
+  TextEditingController empIdController = TextEditingController();
+  final DeleteUserController duc = Get.put(DeleteUserController());
 
-  DialogBoxVerfiyUser({
+  ForgotPassWithMailScreen({
     super.key,
-    required this.verify,
-    required this.userId,
   });
-
-  final int userId;
-  final String verify;
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +25,22 @@ class DialogBoxVerfiyUser extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please add Reject Reason';
+                if (value == null || value.isEmpty || value == "") {
+                  return 'Please add Employee Id';
                 }
                 return null;
               },
               decoration: InputDecoration(
-                labelText: 'Remark',
+                labelText: 'Employee Id',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              controller: rejectReasonController,
+              // obscureText: true,
+              controller: empIdController,
+              // onChanged: (value) {
+              //   vtc.remark.value = remarkController.text;
+              // },
             ),
           ),
           const SizedBox(
@@ -63,17 +61,9 @@ class DialogBoxVerfiyUser extends StatelessWidget {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      await vuc.verifyUser(
-                        userId,
-                        verify,
-                        rejectReasonController.text,
-                      );
-                      toast(AppController.message);
-                      Get.offAll(const BottomNavSuperAdmin(
-                        initialIndex: 0,
+                      await Get.to(ResestPassScreenByOtpScreen(
+                        empId: empIdController.text,
                       ));
-                    } else {
-                      toast('Please add Reject Reason');
                     }
                   },
                   child: const Text(
@@ -95,7 +85,7 @@ class DialogBoxVerfiyUser extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  onPressed: () async {
+                  onPressed: () {
                     Get.back();
                   },
                   child: const Text(

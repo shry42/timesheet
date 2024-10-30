@@ -127,6 +127,7 @@ class _HRUpdateUserScreenState extends State<HRUpdateUserScreen> {
                         child: GestureDetector(
                           onTap: () async {
                             Get.defaultDialog(
+                              barrierDismissible: false,
                               backgroundColor:
                                   const Color.fromARGB(255, 195, 215, 196),
                               title: 'Delete Reason',
